@@ -19,9 +19,10 @@ class DatabaseSeeder extends Seeder
     {
 
         $testUser = User::factory()->create([
-            'name' => 'test user',
+            'name' => 'Test User',
+            'username'=>'testUser',
             'email' => 'test@example.com',
-            'password' => 'password'
+            'password' => 'testuser'
         ]);
 
         $testTreasureHunts = TreasureHunt::factory(3)->create([

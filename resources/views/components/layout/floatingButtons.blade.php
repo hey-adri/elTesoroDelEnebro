@@ -2,7 +2,7 @@
     <div class=" d-flex flex-row gap-3 align-items-end">
         {{$slot}}
         <!-- Link topOfThePage -->
-        <a href="#topOfThePage" id="topOfThePageButton" class="btn btn-primary">
+        <a href="#topOfThePage" id="topOfThePageButton" class="btn btn-primary d-none">
             <i class="fa-solid fa-chevron-up"></i>
         </a>
     </div>

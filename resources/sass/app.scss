@@ -77,8 +77,9 @@ $swal2-timer-progress-bar-background: rgba($primary,0.5);
     font-family: $mainFontFamily
 }
 
-.fa-solid {
+.fa-solid, .svg-inline--fa {
     @extend .m-1;
+    vertical-align: middle;
 }
 
 .handwritten {
@@ -107,7 +108,10 @@ header {
     @extend .display-4;
 }
 
-
+//Estilos para botones
+.btn-secondary{
+    @extend .text-white
+}
 
 
 
@@ -117,9 +121,17 @@ form {
         box-shadow: $box-shadow;
     }
 
+
     label {
         overflow-x: scroll;
         max-width: 100%;
+    }
+    .input-group-text{
+        background-color: $body-bg;
+        color: $body-color;
+        border: $border;
+        @extend .ms-3;
+        cursor: pointer;
     }
 
     fieldset {
@@ -147,6 +159,12 @@ form {
 
 .max-width-md {
     max-width: 750px;
+}
+
+@for $i from 1 through 150 {
+    .max-width-#{calc($i*10)} {
+        max-width: calc($i*10px);
+    }
 }
 
 

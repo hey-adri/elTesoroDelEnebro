@@ -34,9 +34,9 @@ const showToast = (text, icon = 'success', timer = 5000) => {
 
 /**
  * Displays a popup until the user clicks the close button
- * @param {*} text 
- * @param {*} title 
- * @param {*} icon 
+ * @param {*} text
+ * @param {*} title
+ * @param {*} icon
  */
 const showPopup = (text, title = null, icon = 'info', thenFunction = null, confirmButtonText = 'OK') => {
     Swal.fire({
@@ -96,24 +96,30 @@ const refreshBSTooltips = () => {
  * Enables all bootstrap tooltips
  */
 const disableBSTooltips = () => {
+    $('.tooltip').remove()
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    [...tooltipTriggerList].map(tooltipTriggerEl => {
+        const tooltip = new bootstrap.Tooltip(tooltipTriggerEl)
+        tooltip.disable();
+    });
 }
 
 //Shows or hide the scroll to top link
 const enableTopOfThePageLink = () => {
-    $(window).scroll(function () {
-        var scroll = $(window).scrollTop();
-        if (scroll >= 50) {
-            if ($('#topOfThePageButton').hasClass('d-none')) {
-                animateShow('#topOfThePageButton')
-            }
-        } else {
-            if (!$('#topOfThePageButton').hasClass('d-none')) {
-                animateHide('#topOfThePageButton')
-            }
+    $(window).scroll(pageScrolled);
+    pageScrolled()
+}
+const pageScrolled = ()=>{
+    var scroll = $(window).scrollTop();
+    if (scroll >= 80) {
+        if ($('#topOfThePageButton').hasClass('d-none')) {
+            animateShow('#topOfThePageButton')
         }
-    });
+    } else {
+        if (!$('#topOfThePageButton').hasClass('d-none')) {
+            animateHide('#topOfThePageButton')
+        }
+    }
 }
 
 //! Helper Functions

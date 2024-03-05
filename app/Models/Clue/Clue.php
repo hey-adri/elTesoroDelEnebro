@@ -3,6 +3,7 @@
 namespace App\Models\Clue;
 
 use App\Models\TreasureHunt;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
@@ -76,5 +77,25 @@ class Clue extends Model
             $generatedKey = strtoupper(Str::random($length)); //Generating a random key, making sure it's unique
         }while (Clue::pluck('clueKey')->contains($generatedKey));
         return $generatedKey;
+    }
+
+    /**
+     * Mutators and Accessors
+     */
+
+    protected function title(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => ucfirst($value),
+            set: fn (string $value) => ucfirst($value),
+        );
+    }
+
+    protected function clueKey(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => strtoupper($value),
+            set: fn (string $value) => strtoupper($value),
+        );
     }
 }

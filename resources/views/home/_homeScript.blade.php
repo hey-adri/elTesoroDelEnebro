@@ -56,7 +56,7 @@
                                         data-bs-title="{{__('Introduce aquí la clave de la pista encontrada si no puedes escanear su código QR')}}">
                                     <!-- Label -->
                                     <label for="clueKeyInput" class="form-label" for="clueKeyInput">
-                                        <i class="fa-solid fa-qrcode m-1"></i>
+                                        <i class="fa-solid fa-qrcode"></i>
                                         {{__('Clave Identificativa de Pista')}}
                                     </label>
                                 </div>
