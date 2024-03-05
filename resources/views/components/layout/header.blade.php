@@ -17,7 +17,7 @@
             </button>
             <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
                  aria-labelledby="offcanvasNavbarLabel">
-                <div class="offcanvas-header position-relative">
+                <div class="offcanvas-header position-relative justify-content-between">
                     <h1 class="offcanvas-title " id="offcanvasNavbarLabel">
                         <img src="./assets/img/logos/logoPrimary.svg" class="headerLogo" alt="" srcset="">
                         {{__('El Tesoro del Enebro')}}
@@ -28,7 +28,7 @@
                     </button>
                 </div>
                 <div class="offcanvas-body">
-                    <ul class="navbar-nav gap-4 justify-content-end flex-grow-1 p-3">
+                    <ul class="navbar-nav gap-4 justify-content-end align-items-start flex-grow-1 p-3">
                         <li class="nav-item text-primary">
                             <a class="nav-link active" aria-current="page" href="/">
                                 <i class="fa-solid fa-house"></i>
@@ -74,6 +74,7 @@
                                 </li>
                             </ul>
                         </li>
+                        @include('partials.languageSwitcher')
                     </ul>
                 </div>
             </div>

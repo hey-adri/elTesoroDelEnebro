@@ -2,7 +2,7 @@
     "use strict";
     //! Main Configuration
     const configuration = {
-        clueKey: `{{$clueKey}}`,
+        clueKey: @if(isset($clueKey))`{{$clueKey}}`@else ``@endif,
         unlockKey: "default",
         timeoutToHelp: 60, //secs to help
         animationMs: 700,
@@ -105,6 +105,7 @@
      * Allows the clueKeyForm submit only if the clueKey exists
      */
     const clueKeyInputChanged = async () => {
+        $(`#clueKeyInput`).val($(`#clueKeyInput`).val().toUpperCase())
         if ($(`#clueKeyInput`).val() != "") {
             $(`#clueKeyInput`).addClass("is-invalid");
         }
