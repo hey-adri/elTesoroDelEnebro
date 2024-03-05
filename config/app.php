@@ -106,11 +106,10 @@ return [
 | List all locales that your application works with
 |
 */
-    'available_locales' => [
+    'available_locales' => \Illuminate\Support\Collection::wrap([
         'English' => 'en',
         'Spanish' => 'es',
-    ],
-
+    ])->sortKeys()->toArray(),
     /*
     |--------------------------------------------------------------------------
     | Faker Locale

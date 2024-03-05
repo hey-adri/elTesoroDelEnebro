@@ -18,9 +18,9 @@ class Localization
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!empty(session('locale'))) {
-            App::setLocale(Session::get('locale'));
-        }
+        $browserDefaultLocale = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+        $sessionLocale = session('locale');
+        App::setLocale(($sessionLocale)?$sessionLocale:$browserDefaultLocale);
         return $next($request);
     }
 }
