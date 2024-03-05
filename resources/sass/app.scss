@@ -1,0 +1,199 @@
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tangerine:wght@400;700&display=swap');
+
+// Variables
+@import 'variables';
+
+
+//Declaración de variables
+$mainFontFamily: 'Poppins', sans-serif;
+
+//Sobreescritura de variables BS
+//Colors
+$primary: #603601;
+$secondary: #E48F45;
+$textOnPrimary: white;
+$darkerPrimary: #311a00;
+$body-color: #8D7B68;
+$body-bg: #F7EFE5;
+$body-secondary-bg: #eeebe9;
+$danger: #B31312;
+$success: #5F6F52;
+$border-color: $body-color;
+$box-shadow: 6px 6px 12px #fffefc, -6px -6px 12px #E1D7C6, 6px 6px 12px #fffefc, -6px -6px 12px #E1D7C6;
+$border: rgba($body-color,0.3) 2px solid;
+//Texto
+$font-family-sans-serif: 'Montserrat', sans-serif;
+$cursiveFont: 'Tangerine', cursive;
+$font-size-base: 1rem;
+$link-color: $primary;
+//Variables Formularios
+$focus-ring-color: white;
+$input-border-width: 0px;
+$input-border-radius: 0.7rem;
+$input-padding-y: .5rem;
+
+//Tooltips
+$tooltip-bg: $darkerPrimary;
+$tooltip-color: $textOnPrimary;
+//DropDowns
+$dropdown-link-hover-bg: $primary;
+$dropdown-link-hover-color: $textOnPrimary;
+//Buttons
+$btn-border-radius: 0.7rem;
+$btn-border-radius-lg: $btn-border-radius;
+
+
+
+// Bootstrap
+@import 'bootstrap/scss/bootstrap';
+
+
+//! Sobreescritura variables Swal
+$swal2-background: $body-bg;
+$swal2-outline-color: $body-color;
+$swal2-toast-background: $body-bg;
+$swal2-close-button-color: $primary;
+$swal2-confirm-button-background-color: $primary;
+$swal2-title-color: $darkerPrimary;
+$swal2-confirm-button-background-color: $success;
+$swal2-cancel-button-background-color: $danger;
+$swal2-toast-box-shadow: none;
+$swal2-border: $border;
+$swal2-border-radius: 20px;
+$swal2-timer-progress-bar-background: rgba($primary,0.5);
+//! Swal import
+@import 'sweetalert2/src/sweetalert2.scss';
+
+// ! Estilos para texto
+//Estilos para h1-h6
+@for $i from 1 through 6 {
+    h#{$i} {
+        font-family: $cursiveFont;
+        color: $primary;
+    }
+}
+.swal2-title{
+    font-family: $mainFontFamily
+}
+
+.fa-solid {
+    @extend .m-1;
+}
+
+.handwritten {
+    font-family: $cursiveFont;
+    font-size: 1.5em !important;
+}
+
+//! Estilos para header
+header {
+    .headerLogo {
+        height: 50px;
+        @extend .me-2;
+    }
+}
+
+//Estilos para Cards
+.paperLayer {
+    @extend .shadow, .rounded-4;
+}
+
+.paperCard {
+    @extend .paperLayer, .p-4;
+}
+
+.paperCardTitle {
+    @extend .display-4;
+}
+
+
+
+
+
+//Estilos para formularios
+form {
+    .form-control {
+        box-shadow: $box-shadow;
+    }
+
+    label {
+        overflow-x: scroll;
+        max-width: 100%;
+    }
+
+    fieldset {
+        @extend .paperCard;
+
+        &:has(legend) {
+            @extend .position-relative, .mt-5, .pt-5;
+        }
+
+        legend {
+            @extend .position-absolute, .top-0, .translate-middle-y, .bg-primary, .w-auto, .p-1, .rounded-3, .text-white, .px-2;
+        }
+    }
+}
+
+
+//Estilos generales
+.max-width-xs {
+    max-width: 430px;
+}
+
+.max-width-sm {
+    max-width: 540px;
+}
+
+.max-width-md {
+    max-width: 750px;
+}
+
+
+
+
+//! Miscellaneus
+/* Loader */
+.loaderContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    position: relative;
+    left: -0px;
+
+}
+
+.loader {
+    box-sizing: border-box;
+    position: relative;
+    width: 48px;
+    height: 48px;
+    animation: spin 1s linear infinite;
+}
+
+.loader:after,
+.loader:before {
+    content: "";
+    width: 24px;
+    height: 24px;
+    position: absolute;
+    border-radius: 50%;
+    background: $darkerPrimary;
+    animation: spin 1s linear infinite;
+    transform-origin: 0px 100%;
+}
+
+.loader:before {
+    transform-origin: 0 50%;
+    background: $textOnPrimary;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
