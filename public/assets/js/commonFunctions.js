@@ -6,6 +6,7 @@ $(() => {
     //Enabling Tooltips
     refreshBSTooltips()
     enableTopOfThePageLink()
+    setUpCustomValidators()
 })
 
 //! Messaging Functions
@@ -38,15 +39,24 @@ const showToast = (text, icon = 'success', timer = 5000) => {
  * @param {*} title
  * @param {*} icon
  */
-const showPopup = (text, title = null, icon = 'info', thenFunction = null, confirmButtonText = 'OK') => {
+const showDeleteDialog = (text, title = null , deleteButtonText, cancelButtonText, deleteFunction, cancelledFunction=null) => {
     Swal.fire({
         title,
         text,
-        icon,
-        confirmButtonText
-    }).then(() => {
-        thenFunction?.apply()
-    }
+        icon:'warning',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText:deleteButtonText,
+        showCancelButton: true,
+        cancelButtonText,
+        focusCancel: true
+    }).then((result) => {
+            if (result.isDenied) {
+                deleteFunction?.apply()
+            }else{
+                cancelledFunction?.apply()
+            }
+        }
     )
 }
 
@@ -143,4 +153,35 @@ const isHtml = (string) => /<(br|basefont|hr|input|source|frame|param|area|meta|
  */
 const formatAsParagraphs = (raw) => {
     return `<p>${raw.replace(/(\n)+/gm, `</p><p>`)}</p>`
+}
+
+/**
+ * Sets up Custom validators for Jquery Validate
+ */
+const setUpCustomValidators = ()=>{
+    /**
+     * Email validation
+     */
+    $.validator.addMethod("emailV2", function (value, element) {
+        const re = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+        return this.optional(element) || re.test(element.value);
+    });
+    $.validator.addMethod("regex", function (value, element, regex) {
+        const re = new RegExp(regex)
+        return this.optional(element) || re.test(element.value);
+    });
+    /**
+     * Usernames must be between 4-30 chars, and contain only lowercase letters, numbers . - and _.
+     */
+    $.validator.addMethod("username", function (value, element) {
+        const re = new RegExp(/^(?=.{4,20}$)[a-z0-9._-]+$/)
+        return this.optional(element) || re.test(element.value);
+    });
+    /**
+     * Passwords can have letters a-zA-Z, spaces, including ñ and accented vowels, digits and any special characters, must be between 4-30 chars.
+     */
+    $.validator.addMethod("password", function (value, element) {
+        const re = new RegExp(/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\d$&+,:;=?@#|'<>.^*()%! -]{8,30}$/)
+        return this.optional(element) || re.test(element.value);
+    });
 }

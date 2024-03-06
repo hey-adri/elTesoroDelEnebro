@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('username')->unique();
+            $table->string('profileImage')->default('https://images.theconversation.com/files/552239/original/file-20231005-16-1flnlj.jpg?ixlib=rb-1.1.0&rect=0%2C26%2C5815%2C3844&q=20&auto=format&w=320&fit=clip&dpr=2&usm=12&cs=strip');
+            $table->integer('maxProClues')->default(env('USER_INITIAL_PRO_CLUES'));
             $table->boolean('isAdmin')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

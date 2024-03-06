@@ -10,15 +10,17 @@
                             <fieldset>
                                 <legend>{{__('Accede a tu Cuenta')}}</legend>
                                 <div class="mb-4">
-                                    <div class="form-floating"
-                                         data-bs-toggle="tooltip" data-bs-placement="right"
-                                         data-bs-title="{{__('Introduce tu nombre de usuario. ¡Cuidado, es distinto de tu correo!')}}"
-                                    >
-                                        <input type="text" class="form-control" name="username" id="username" placeholder=" " value="{{old('username')}}">
-                                        <label for="username" class="form-label">
-                                            <i class="fa-solid fa-id-badge"></i>
-                                            {{__('Nombre de Usuario')}}
-                                        </label>
+                                    <div class="input-group">
+                                        <div class="form-floating"
+                                             data-bs-toggle="tooltip" data-bs-placement="right"
+                                             data-bs-title="{{__('Introduce tu nombre de usuario. ¡Cuidado, es distinto de tu correo!')}}"
+                                        >
+                                            <input type="text" class="form-control" name="username" id="username" placeholder=" " value="{{old('username')}}">
+                                            <label for="username" class="form-label">
+                                                <i class="fa-solid fa-id-badge"></i>
+                                                {{__('Nombre de Usuario')}}
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="mb-4">
@@ -66,6 +68,7 @@
                 @enderror
                 confForm()
                 confTogglePassword()
+                $('#username').on('input',()=>{$('#username').val($('#username').val().toLowerCase())})
             })
 
             /**
@@ -90,7 +93,7 @@
                         errorPlacement: function (error, element) {
                             $(error).addClass('text-danger').addClass('mt-2')
                             error.addClass();
-                            $(element.parent("div")).after(error)
+                            $(element.closest(".input-group")).after(error)
                         },
                         highlight: function (element, errorClass, validClass) {
                             // disableBSTooltips()
@@ -103,17 +106,21 @@
                             username: {
                                 required: true,
                                 maxlength:255,
+                                username:true
                             },
                             password: {
                                 required: true,
-                                maxlength:255
-                            },
+                                maxlength:255,
+                                password: true,
+                            }
                         },
                         submitHandler: (form) => { //! Si no hay ningún error se corre el bloque submitHandler
                             form.submit()
                         }
                     }
                 );
+                $.validator.messages.username = '{{__("Debe tener entre 4 y 30 carácteres. Sólo letras minúsculas, dígitos y . _ -")}}';
+                $.validator.messages.password = '{{__("Debe tener entre 8 y 30 carácteres. Sólo letras, espacios, dígitos y cualquier carácter especial.")}}';
             };
 
         </script>

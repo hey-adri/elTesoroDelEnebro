@@ -3,10 +3,12 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Clue\Clue;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -39,8 +41,22 @@ class User extends Authenticatable
      * One user is the owner of many treasureHunts
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function treasureHunts(){
+    public function treasure_hunts(){
         return $this->hasMany(TreasureHunt::class);
+    }
+
+
+    /**
+     * Returns all the clues of this user
+     * @return Collection
+     */
+    public function clues(){
+        $treasureHunts = $this->treasure_hunts()->with('clues')->get();
+        $clues = new Collection([]);
+        foreach ($treasureHunts as $treasureHunt){
+            $clues = $clues->merge($treasureHunt->clues);
+        }
+        return $clues;
     }
 
     /**
@@ -61,4 +77,6 @@ class User extends Authenticatable
             set: fn (string $value) => strtolower($value),
         );
     }
+
+
 }

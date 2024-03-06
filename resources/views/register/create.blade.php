@@ -5,41 +5,46 @@
             <div class="row g-5 justify-content-center">
                 <div class="col-12 max-width-sm">
                     <article>
-                        <form method="post" action="{{route('sessions.store')}}" id="registerForm">
+                        <form method="post" action="{{route('register.store')}}" id="registerForm">
                             @csrf
                             <fieldset>
                                 <legend>{{__('Crea tu Cuenta')}}</legend>
                                 <div class="mb-4">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" name="name" id="name" placeholder=" " value="{{old('name')}}">
-                                        <label for="name" class="form-label">
-                                            <i class="fa-solid fa-signature"></i>
-                                            {{__('Nombre y Apellidos')}}
-                                        </label>
+                                    <div class="input-group">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" name="name" id="name" placeholder=" " value="{{old('name')}}">
+                                            <label for="name" class="form-label">
+                                                <i class="fa-solid fa-signature"></i>
+                                                {{__('Nombre y Apellidos')}}
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="mb-4">
-                                    <div class="form-floating">
-                                        <input type="email" class="form-control" name="email" id="email" placeholder=" " value="{{old('email')}}">
-                                        <label for="email" class="form-label">
-                                            <i class="fa-solid fa-at"></i>
-                                            {{__('Email')}}
-                                        </label>
+                                    <div class="input-group">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" name="email" id="email" placeholder=" " value="{{old('email')}}">
+                                            <label for="email" class="form-label">
+                                                <i class="fa-solid fa-at"></i>
+                                                {{__('Email')}}
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 @error('email')
                                     <div class="error text-danger mt-2">{{__('¡Vaya, parece que este email ya está en uso!')}}</div>
                                 @enderror
                                 <div class="mb-4">
-                                    <div class="form-floating"
+                                    <div class="input-group"
                                          data-bs-toggle="tooltip" data-bs-placement="right"
-                                         data-bs-title="{{__('Crea tu nombre de usuario. Inspírate, debe ser único.')}}"
-                                    >
-                                        <input type="text" class="form-control" name="username" id="username" placeholder=" " value="{{old('username')}}">
-                                        <label for="username" class="form-label">
-                                            <i class="fa-solid fa-id-badge"></i>
-                                            {{__('Nombre de Usuario')}}
-                                        </label>
+                                         data-bs-title="{{__('Debe tener entre 4 y 30 carácteres. Sólo letras minúsculas, dígitos y . _ -')}}">
+                                        <div class="form-floating">
+                                            <input type="text" class="form-control" name="username" id="username" placeholder=" " value="{{old('username')}}">
+                                            <label for="username" class="form-label">
+                                                <i class="fa-solid fa-id-badge"></i>
+                                                {{__('Nombre de Usuario')}}
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 @error('username')
@@ -48,7 +53,7 @@
                                 <div class="mb-4">
                                     <div class="input-group"
                                          data-bs-toggle="tooltip" data-bs-placement="right"
-                                         data-bs-title="{{__('La contraseña debe tener al menos 8 carácteres')}}"
+                                         data-bs-title="{{__("Debe tener entre 8 y 30 carácteres. Sólo letras, espacios, dígitos y cualquier carácter especial.")}}"
                                     >
                                         <div class="form-floating">
                                             <input type="password" class="form-control passwordToggle" name="password" id="password" placeholder=" ">
@@ -61,15 +66,16 @@
                                     </div>
                                 </div>
                                 <div class="mb-4">
-                                    <div class="form-floating"
+                                    <div class="input-group"
                                          data-bs-toggle="tooltip" data-bs-placement="right"
-                                         data-bs-title="{{__('Debe coincidir con la contraseña anterior')}}"
-                                    >
-                                        <input type="password" class="form-control passwordToggle" name="rePassword" id="rePassword" placeholder=" ">
-                                        <label for="rePassword" class="form-label">
-                                            <i class="fa-solid fa-shield"></i>
-                                            {{__('Repite tu contraseña')}}
-                                        </label>
+                                         data-bs-title="{{__('Debe coincidir con la contraseña anterior')}}">
+                                        <div class="form-floating">
+                                            <input type="password" class="form-control passwordToggle" name="rePassword" id="rePassword" placeholder=" ">
+                                            <label for="rePassword" class="form-label">
+                                                <i class="fa-solid fa-shield"></i>
+                                                {{__('Repite tu contraseña')}}
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 <!-- Submit -->
@@ -85,7 +91,7 @@
                                 </div>
                                 <div class="mb-4">
                                     {{__('¿Ya tienes cuenta?')}}
-                                    <a href="{{route('sessions.create')}}">{{__('Inicia Sesión')}}</a>
+                                    <a href="{{route('login')}}">{{__('Inicia Sesión')}}</a>
                                 </div>
                             </fieldset>
                         </form>
@@ -102,6 +108,7 @@
             $(()=>{
                 confForm()
                 confTogglePassword()
+                $('#username').on('input',()=>{$('#username').val($('#username').val().toLowerCase())})
             })
 
             /**
@@ -116,19 +123,17 @@
                 })
             }
 
-
             /**
              * Uses Jquery Validate to configure the form
              */
             const confForm = () => {
-                //Todo seguir, validar campos
                 $("#registerForm").validate(
                     {
                         errorElement: "div",
                         errorPlacement: function (error, element) {
                             $(error).addClass('text-danger').addClass('mt-2')
                             error.addClass();
-                            $(element.parent("div")).after(error)
+                            $(element.closest(".input-group")).after(error)
                         },
                         highlight: function (element, errorClass, validClass) {
                             // disableBSTooltips()
@@ -141,24 +146,39 @@
                             name:{
                                 required:true,
                                 maxlength:255,
-
+                            },
+                            email:{
+                                required:true,
+                                maxlength:255,
+                                emailV2:true
                             },
                             username: {
                                 required: true,
                                 maxlength:255,
-                                minlength:2
+                                username:true
                             },
                             password: {
                                 required: true,
-                                maxlength:255
+                                maxlength:255,
+                                password: true,
                             },
+                            rePassword:{
+                                required: true,
+                                maxlength:255,
+                                equalTo:'#password',
+                                password: true,
+                            }
                         },
                         submitHandler: (form) => { //! Si no hay ningún error se corre el bloque submitHandler
                             form.submit()
                         }
                     }
                 );
+                $.validator.messages.emailV2 = '{{__("Por favor, introduce in email válido.")}}';
+                $.validator.messages.username = '{{__("Debe tener entre 4 y 30 carácteres. Sólo letras minúsculas, dígitos y . _ -")}}';
+                $.validator.messages.password = '{{__("Debe tener entre 8 y 30 carácteres. Sólo letras, espacios, dígitos y cualquier carácter especial.")}}';
             };
+
 
         </script>
     </x-slot>

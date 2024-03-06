@@ -28,7 +28,7 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav gap-4 justify-content-end align-items-start flex-grow-1 p-3">
                         <li class="nav-item text-primary">
-                            <a class="nav-link {{request()->routeIs(['home.*'])?'active':''}}" aria-current="page" href="{{route('home')}}">
+                            <a class="nav-link {{request()->routeIs(['home','home.*'])?'active':''}}" aria-current="page" href="{{route('home')}}">
                                 <i class="fa-solid fa-house"></i>
                                 {{__('Home')}}
                             </a>
@@ -45,16 +45,16 @@
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
-                                    <li><a class="dropdown-item" href="#">Área Personal</a></li>
+                                    <li><a class="dropdown-item {{request()->routeIs(['userArea.*'])?'fw-bold':''}}" href="{{route('userArea.index')}}">Área Personal</a></li>
                                     <li class="dropdown-item text-center bg-body">
-                                        <a href="{{route('sessions.destroy')}}" class="btn btn-danger">
+                                        <a href="{{route('logout')}}" class="btn btn-danger">
                                             <i class="fa-solid fa-right-from-bracket m-1"></i>
                                             {{__('Cerrar Sesión')}}
                                         </a>
                                     </li>
                                 @else
                                     <li class="dropdown-item text-center bg-body">
-                                        <a href="{{route('sessions.create')}}" class="btn btn-primary">
+                                        <a href="{{route('login')}}" class="btn btn-primary">
                                             <i class="fa-solid fa-right-to-bracket m-1"></i>
                                             {{__('Inciar Sesión')}}
                                         </a>

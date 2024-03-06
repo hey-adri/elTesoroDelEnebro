@@ -27,7 +27,6 @@ class SessionsController extends Controller
         );
 
         //Checking if credentials exist in database
-//        $attributes['username'] = strtolower($attributes['username']);
         if (!auth()->attempt($attributes)){
             //Auth Failed, validation exception
             throw ValidationException::withMessages(

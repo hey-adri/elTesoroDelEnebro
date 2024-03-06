@@ -57,7 +57,8 @@ $swal2-close-button-color: $primary;
 $swal2-confirm-button-background-color: $primary;
 $swal2-title-color: $darkerPrimary;
 $swal2-confirm-button-background-color: $success;
-$swal2-cancel-button-background-color: $danger;
+$swal2-deny-button-background-color: $danger;
+$swal2-cancel-button-background-color: $body-color;
 $swal2-toast-box-shadow: none;
 $swal2-border: $border;
 $swal2-border-radius: 20px;
@@ -166,7 +167,23 @@ form {
         max-width: calc($i*10px);
     }
 }
-
+.squareRatio{
+    aspect-ratio: 1;
+}
+.fill {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden
+}
+.fill img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover
+}
+.roundPhoto{
+    @extend .fill, .squareRatio, .rounded-circle
+}
 
 
 
