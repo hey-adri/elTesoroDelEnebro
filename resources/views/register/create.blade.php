@@ -32,7 +32,7 @@
                                     </div>
                                 </div>
                                 @error('email')
-                                    <div class="error text-danger mt-2">{{__('¡Vaya, parece que este email ya está en uso!')}}</div>
+                                    <div class="error text-danger my-4">{{__('¡Vaya, parece que este email ya está en uso!')}}</div>
                                 @enderror
                                 <div class="mb-4">
                                     <div class="input-group"
@@ -48,7 +48,7 @@
                                     </div>
                                 </div>
                                 @error('username')
-                                    <div class="error text-danger mt-2">{{__('¡Vaya, parece que alguien ya tiene este nombre de usuario!')}}</div>
+                                    <div class="error text-danger my-4">{{__('¡Vaya, parece que alguien ya tiene este nombre de usuario!')}}</div>
                                 @enderror
                                 <div class="mb-4">
                                     <div class="input-group"
@@ -82,7 +82,7 @@
                                 <div class="mb-4">
                                     <div class="row">
                                         <div class="col">
-                                            <button type="submit" class="btn btn-primary w-100 btn-lg">
+                                            <button type="submit" class="btn btn-primary w-100">
                                                 <i class="fa-solid fa-user-plus"></i>
                                                 {{__('Regístrate')}}
                                             </button>
@@ -98,7 +98,7 @@
                     </article>
                 </div>
                 <div class="p-2 mt-5 d-flex justify-content-center">
-                    <img src="./assets/img/logos/logoPrimary.svg" class="img-fluid max-width-60" alt="" srcset="">
+                    <img src="{{asset('/assets/img/logos/logoPrimary.svg')}}" class="img-fluid max-width-60" alt="" srcset="">
                 </div>
             </div>
     </x-slot>
@@ -131,7 +131,7 @@
                     {
                         errorElement: "div",
                         errorPlacement: function (error, element) {
-                            $(error).addClass('text-danger').addClass('mt-2')
+                            $(error).addClass('text-danger').addClass('my-4')
                             error.addClass();
                             $(element.closest(".input-group")).after(error)
                         },

@@ -42,5 +42,33 @@ class DatabaseSeeder extends Seeder
                 ]);
             }
         }
+
+
+//        for ($i = 0; $i<2; $i++){
+//            $testUser = User::factory()->create([
+//                'name' => "Test User $i",
+//                'username'=>"testUser$i",
+//                'email' => "test$i@example.com",
+//                'password' => "testuser$i"
+//            ]);
+//
+//            $testTreasureHunts = TreasureHunt::factory(10)->create([
+//                'user_id' => $testUser->id,
+//            ]);
+//
+//            foreach ($testTreasureHunts as $treasureHunt){
+//                $clues = Clue::factory(20)->create([
+//                    'treasure_hunt_id'=>$treasureHunt->id
+//                ]);
+//                foreach ($clues as $clue){
+//                    ClueImage::factory()->create([
+//                        'clue_id'=>$clue->id
+//                    ]);
+//                    ClueEmbeddedVideo::factory()->create([
+//                        'clue_id'=>$clue->id
+//                    ]);
+//                }
+//            }
+//        }
     }
 }

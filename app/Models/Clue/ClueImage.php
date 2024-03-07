@@ -11,6 +11,15 @@ class ClueImage extends Model
 
     protected $guarded = ['id'];
 
+    protected static function booted()
+    {
+        parent::booted();
+        self::deleting(function (ClueImage $clueImage){
+            //Todo delete clue image from Storage
+            echo 'Todo delete clue image: '.$clueImage->title;
+        });
+    }
+
     /**
      * One image belongs to one clue
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

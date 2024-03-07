@@ -3,7 +3,7 @@
     <nav class="navbar navbar-expand-md sticky-top py-3 shadow rounded-bottom-4">
         <div class="container">
             <a class="navbar-brand text-primary d-flex align-items-center flex-grow-1" href="{{route('home')}}">
-                <img src="./assets/img/logos/logoPrimary.svg" class="headerLogo" alt="" srcset="">
+                <img src="{{asset('/assets/img/logos/logoPrimary.svg')}}" class="headerLogo" alt="" srcset="">
                 <h1 class="m-0 pt-2 pt-md-0 text-center flex-grow-1 flex-md-grow-0 text-md-start">
                 {{__('El Tesoro del Enebro')}}
                 </h1>
@@ -17,7 +17,7 @@
                  aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header position-relative justify-content-between">
                     <h1 class="offcanvas-title " id="offcanvasNavbarLabel">
-                        <img src="./assets/img/logos/logoPrimary.svg" class="headerLogo" alt="" srcset="">
+                        <img src="{{asset('/assets/img/logos/logoPrimary.svg')}}" class="headerLogo" alt="" srcset="">
                         {{__('El Tesoro del Enebro')}}
                     </h1>
                     <button type="button" class="btn btn-lg btn-outline-primary border-0 d-md-none"

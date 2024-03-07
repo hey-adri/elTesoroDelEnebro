@@ -39,7 +39,7 @@
                                 <div class="mb-4">
                                     <div class="row">
                                         <div class="col">
-                                            <button type="submit" class="btn btn-primary w-100 btn-lg">
+                                            <button type="submit" class="btn btn-primary w-100">
                                                 <i class="fa-solid fa-right-to-bracket"></i>
                                                 {{__('Iniciar Sesión')}}
                                             </button>
@@ -55,7 +55,7 @@
                     </article>
                 </div>
                 <div class="p-2 mt-5 d-flex justify-content-center">
-                    <img src="./assets/img/logos/logoPrimary.svg" class="img-fluid max-width-60" alt="" srcset="">
+                    <img src="{{asset('/assets/img/logos/logoPrimary.svg')}}" class="img-fluid max-width-60" alt="" srcset="">
                 </div>
             </div>
     </x-slot>
@@ -91,7 +91,7 @@
                     {
                         errorElement: "div",
                         errorPlacement: function (error, element) {
-                            $(error).addClass('text-danger').addClass('mt-2')
+                            $(error).addClass('text-danger').addClass('my-4')
                             error.addClass();
                             $(element.closest(".input-group")).after(error)
                         },
@@ -105,13 +105,11 @@
                         rules: {
                             username: {
                                 required: true,
-                                maxlength:255,
-                                username:true
+                                maxlength:255
                             },
                             password: {
                                 required: true,
-                                maxlength:255,
-                                password: true,
+                                maxlength:255
                             }
                         },
                         submitHandler: (form) => { //! Si no hay ningún error se corre el bloque submitHandler
@@ -119,8 +117,6 @@
                         }
                     }
                 );
-                $.validator.messages.username = '{{__("Debe tener entre 4 y 30 carácteres. Sólo letras minúsculas, dígitos y . _ -")}}';
-                $.validator.messages.password = '{{__("Debe tener entre 8 y 30 carácteres. Sólo letras, espacios, dígitos y cualquier carácter especial.")}}';
             };
 
         </script>

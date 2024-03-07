@@ -143,9 +143,21 @@ form {
         }
 
         legend {
-            @extend .position-absolute, .top-0, .translate-middle-y, .bg-primary, .w-auto, .p-1, .rounded-3, .text-white, .px-2;
+            @extend .position-absolute, .top-0, .translate-middle-y, .bg-primary, .w-auto, .p-1, .rounded-3, .text-white, .px-2, .fs-6;
         }
     }
+}
+
+//Estilos para badges
+.badge{
+    background-color: $primary-bg-subtle;
+    color: $primary;
+    @extend .small, .p-1, .rounded, .text-nowrap, .fw-normal;
+}
+
+.badge-secondary{
+    @extend .badge, .text-white;
+    background-color: $secondary;
 }
 
 
@@ -167,6 +179,14 @@ form {
         max-width: calc($i*10px);
     }
 }
+
+@for $i from 1 through 5 {
+    .spacer-#{$i} {
+        @extend .m-#{$i};
+    }
+}
+
+
 .squareRatio{
     aspect-ratio: 1;
 }

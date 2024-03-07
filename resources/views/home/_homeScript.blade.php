@@ -61,7 +61,7 @@
                                     </label>
                                 </div>
                                 <!-- Error -->
-                                <div class="clueKeyErrors d-none">
+                                <div class="clueKeyErrors d-none my-4">
                                     <div class="form-text text-danger">{{__('¡Vaya, no hemos encontrado ninguna pista asociada!')}}</div>
                                 </div>
                             </div>
@@ -226,7 +226,7 @@
                     </label>
                 </div>
                 <!-- Error -->
-                <div class="form-text text-danger d-none unlockKeyErrors mt-2">{{__('¡Vaya, Código de Desbloqueo incorrecto!')}}</div>
+                <div class="form-text text-danger d-none unlockKeyErrors my-4">{{__('¡Vaya, Código de Desbloqueo incorrecto!')}}</div>
             </div>
             <!-- Submit -->
             <div class="mb-4">

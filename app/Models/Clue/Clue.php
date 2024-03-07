@@ -6,6 +6,7 @@ use App\Models\TreasureHunt;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class Clue extends Model
@@ -21,16 +22,26 @@ class Clue extends Model
         parent::boot();
         self::creating(function (Clue $clue){
             $clue->clueKey = self::generateRandomClueKey();
+            $clue->order = $clue->treasure_hunt->clues()->count()+1;
         });
     }
 
     protected static function booted()
     {
         parent::booted();
+        /**
+         * Implementing cascade delete on model
+         */
         self::deleting(function (Clue $clue){
-            if(isset($clue->image)){
-                //Todo delete clue image from Storage
-                echo 'Todo delete clue image: '.$clue->image->title;
+            try {
+                if(isset($clue->image)){
+                    $clue->image->deleteOrFail();
+                }
+                if(isset($clue->embedded_video)){
+                    $clue->embedded_video->deleteOrFail();
+                }
+            }catch (\Exception $exception){
+                Log::log('error',$exception->getMessage());
             }
         });
     }
@@ -58,6 +69,15 @@ class Clue extends Model
      */
     public function embedded_video(){
         return $this->hasOne(ClueEmbeddedVideo::class);
+    }
+
+    /**
+     * A Pro clue is one that has either a video or an image
+     * @return bool
+     */
+    public function isPro(){
+        if(isset($this->image)||isset($this->embedded_video)) return true;
+        else return false;
     }
 
     /**

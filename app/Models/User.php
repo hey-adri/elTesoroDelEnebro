@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -16,6 +17,21 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $guarded = ['id'];
+
+    protected static function booted()
+    {
+        parent::booted();
+        /**
+         * Implementing cascade delete on model
+         */
+        self::deleting(function (User $user){
+            try {
+                $user->treasure_hunts->map(fn($treasureHunt)=>$treasureHunt->deleteOrFail());
+            }catch (\Exception $exception){
+                Log::log('error',$exception->getMessage());
+            }
+        });
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -57,6 +73,14 @@ class User extends Authenticatable
             $clues = $clues->merge($treasureHunt->clues);
         }
         return $clues;
+    }
+
+    /**
+     * Returns all the pro clues of one user
+     * @return Collection|\Illuminate\Support\Traits\EnumeratesValues
+     */
+    public function proClues(){
+        return $this->clues()->where(fn($clue)=>$clue->isPro());
     }
 
     /**

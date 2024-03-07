@@ -37,15 +37,15 @@ class SessionsController extends Controller
         //Regenerating the session to prevent attacks
         session()->regenerate();
         //Redirecting home
-        return redirect(route('home'))->with('toast',[
+        return redirect(route('userArea.index'))->with('toast',[
             'icon' => 'success',
-            'text'=>__('Sesión Iniciada como ').auth()->user()->username
+            'text'=>__('Sesión Iniciada como ').auth()->user()->name
         ]);
     }
 
     public function destroy(){
         auth()->logout();
-        return redirect('/')->with('toast',[
+        return redirect(route('home'))->with('toast',[
             'icon' => 'success',
             'text'=>__('Has cerrado sesión')
         ]);

@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Main\Clue;
-
+namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Helpers\HelperController;
 use App\Models\Clue\Clue;
 use App\Models\TreasureHunt;
-use Illuminate\Support\Facades\Log;
+use App\Models\User;
+use Illuminate\Http\Request;
 
-class ClueController extends Controller
+class UserController extends Controller
 {
     public function index(){
         return 'todo';
@@ -18,13 +17,13 @@ class ClueController extends Controller
 //            'treasure_hunts'=>$treasure_hunts
 //        ]);
     }
-    public function show(Clue $clue){
+    public function show(User $user){
         return 'todo';
 //        return view('treasureHunts.show',[
 //            'treasureHunt'=>$treasureHunt
 //        ]);
     }
-    public function create(TreasureHunt $treasureHunt){
+    public function create(){
 //        return view('treasureHunts.create');
         return 'todo';
     }
@@ -56,12 +55,12 @@ class ClueController extends Controller
         return 'todo';
     }
 
-    public function edit(Clue $clue){
+    public function edit(User $user){
 //        return view('treasureHunts.edit',['treasureHunt'=>$treasureHunt]);
         return 'todo';
     }
 
-    public function update(Clue $clue){
+    public function update(User $user){
 //        $attributes = request()->validate(
 //            [
 //                "title"=>["required","max:255"],
@@ -86,7 +85,7 @@ class ClueController extends Controller
         return 'todo';
     }
 
-    public function destroy(Clue $clue){
+    public function destroy(User $user){
 //        try {
 //            $treasureHunt->deleteOrFail();
 //
