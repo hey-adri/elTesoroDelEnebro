@@ -153,8 +153,10 @@ class UserController extends Controller
      * @return void
      */
     private function deleteProfileImageFromStorage(User $user){
-        if((!User::isImagePathDefault($user->profile_image)) && (Storage::exists($user->profile_image))){
-            Storage::delete($user->profile_image);
+        if(!User::isImagePathDefault($user->profile_image)){
+            if(Storage::exists($user->profile_image)){
+                Storage::delete($user->profile_image);
+            }
             self::setDefaultProfileImage($user);
         }
     }

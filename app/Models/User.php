@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Clue\Clue;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -88,11 +89,26 @@ class User extends Authenticatable
     }
 
     /**
-     * Returns all the pro clues of one user
-     * @return Collection|\Illuminate\Support\Traits\EnumeratesValues
+     * Returns all the pro clues of this user
+     * @return mixed
      */
     public function proClues(){
-        return $this->clues()->where(fn($clue)=>$clue->isPro());
+        $user = $this;
+        return Clue::whereHas('treasure_hunt', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->where(function ($query) {
+            $query->whereHas('image')
+                ->orWhereHas('embedded_video');
+        })->get();
+    }
+
+    /**
+     * Returns the number of pro clues that an user has left
+     * @return int|mixed
+     */
+    public function proCluesLeft(){
+        $left = $this->max_pro_clues-count($this->proClues());
+        return ($left>0? $left: 0);
     }
 
     /**

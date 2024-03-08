@@ -185,7 +185,6 @@
              * Ensures the image stays within its limits
              */
             const checkImage = ()=>{
-                console.log('here')
                 if(!checkInputFileSize('#profile_image',{{env('MAX_PROFILE_IMAGE_SIZE')}})){
                     $('#profile_image').val('')
                     $('#profile_image').addClass('is-invalid').removeClass('is-valid')
@@ -200,7 +199,6 @@
              */
             const deleteImageButtonClicked = ()=>{
                 const deleteImageInput = $(`#deleteImage`);
-                console.log(deleteImageInput.prop('disabled'))
                 deleteImageInput.prop('disabled',!deleteImageInput.prop('disabled')) //Toggling the input's enabling
                 if(deleteImageInput.prop('disabled')){
                     $('#deleteImageButton span').text(`{{__('Eliminar Imagen de Perfil')}}`);
@@ -273,26 +271,13 @@
                 $.validator.messages.username = '{{__("Debe tener entre 4 y 30 carácteres. Sólo letras minúsculas, dígitos y . _ -")}}';
                 $.validator.messages.passwordCheck = '{{__("Debe tener entre 8 y 30 carácteres. Sólo letras, espacios, dígitos y cualquier carácter especial.")}}';
             };
-        </script>
-
-        <script>
             {{-- Adding Confirmation to delete Buttons --}}
             document.addEventListener('DOMContentLoaded',()=>{
                 $('.deleteUserButton').on('click',askForUserDeleteConfirmation)
             })
             const askForUserDeleteConfirmation = ()=>{
                 event.preventDefault()
-                const form = $(event.target).closest('form');
-                {{--showDeleteDialog(--}}
-                {{--    `{{__('Seguro que deseas eliminar la cuenta ')}} "${$(event.target).attr(`data-username`)}", se eliminarán todas sus Búsquedas del Tesoro y Pistas.`,--}}
-                {{--    `{{__('¿Estás Seguro?')}}`,--}}
-                {{--    `{{__('Sí, eliminar')}}`,--}}
-                {{--    `{{__('No, cancelar')}}`,--}}
-                {{--    ()=>{--}}
-                {{--        showLoading(`{{__("¡Hasta Pronto!")}}`,`{{__("Eliminando Cuenta...")}}`)--}}
-                {{--        form.submit()--}}
-                {{--    }--}}
-                {{--)--}}
+                const form = $(event.target).closest('form')
                 showAccountDeleteDialog(
                     `{{__('Soy consciente de que eliminando la cuenta ')}} "${$(event.target).attr(`data-username`)}", se eliminarán todas sus Búsquedas del Tesoro y Pistas.`,
                     `{{__('¿Estás Seguro?')}}`,

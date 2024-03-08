@@ -13,7 +13,7 @@ class Clue extends Model
 {
     use HasFactory;
 
-    protected $guarded=['id','clueKey'];
+    protected $guarded=['id'];
     protected $with = ['image','embedded_video'];
 
     //Upon clue creation, we'll generate an unique clueKey, making sure it doesn't exist already

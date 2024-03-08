@@ -31,19 +31,14 @@ class ApiClueController extends Controller
                 $response['data']['owner']=[
                     'name'=>$clue->treasure_hunt->owner->name
                 ];
-                //Removing all the sensitive data from clue before sending
-                unset(
-                    $clue->id,
-                    $clue->unlockKey,
-                    $clue->unlockHint,
-                    $clue->image->id,
-                    $clue->image->clue_id,
-                    $clue->treasure_hunt_id,
-                    $clue->embedded_video->id,
-                    $clue->embedded_video->clue_id,
-                    $clue->treasure_hunt
-                );
                 $response['data']['clue']=$clue;
+                //Removing sensitive data
+                unset($response['data']['clue']['treasure_hunt']);
+                //Prepending full path if image is local
+                if(!empty($clue->image) && (!str_starts_with($clue->image->src, 'https://'))){
+                    $response['data']['clue']['image']['src'] = asset('storage/'.$clue->image->src);
+                }
+
             }else{
                 //Clue Locked
                 $response['message']="You've found a Clue but it seems locked, you'll need to provide the 'unlockKey' as a parameter to get the Clue's contents";

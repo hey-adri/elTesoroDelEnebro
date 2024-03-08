@@ -263,6 +263,7 @@ const makeInputDependentOn = (primaryInputSelector,secondaryInputsSelector)=>{
     let secondaryInputs = $(secondaryInputsSelector).find('input')
     if(secondaryInputs.length===0)  secondaryInputs = $(secondaryInputsSelector)
     const check = ()=>{
+        console.log(primaryInput.val())
         if(primaryInput.val()!=='') {
             secondaryInputs.prop('disabled',false)
         }
@@ -270,7 +271,7 @@ const makeInputDependentOn = (primaryInputSelector,secondaryInputsSelector)=>{
             secondaryInputs.prop('disabled',true).val('')
         }
     }
-    primaryInput.on('input',check)
+    primaryInput.on('input change',check)
     check()
 }
 

@@ -95,7 +95,6 @@ Route::middleware(['auth'])->group(function(){
 //Todo 8 See if queries in models and API can be optimized
 //Todo 9 don't forget php artisan storage:link
 Route::get('hola',function (){
-//    $clue = Clue::factory()->create();
-    ddd(User::getRandomProfileImagePath());
+    ddd(asset('storage/'.\App\Models\Clue\ClueImage::latest()->get()->first()->src));
 });
 
