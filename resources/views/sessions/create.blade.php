@@ -112,7 +112,8 @@
                                 maxlength:255
                             }
                         },
-                        submitHandler: (form) => { //! Si no hay ningún error se corre el bloque submitHandler
+                        submitHandler: (form) => {
+                            showLoading(`{{__("Sólo será un momentito.")}}`,`{{__("Comprobando Credenciales...")}}`)
                             form.submit()
                         }
                     }

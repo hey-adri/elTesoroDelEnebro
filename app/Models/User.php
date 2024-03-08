@@ -3,13 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use App\Models\Clue\Clue;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -18,15 +18,27 @@ class User extends Authenticatable
 
     protected $guarded = ['id'];
 
+    //Upon clue creation, we'll generate a random profile image if not set
+    protected static function boot()
+    {
+        parent::boot();
+        self::creating(function (User $user){
+            if(empty($user->profile_image)) $user->profile_image = self::getRandomProfileImagePath();
+        });
+    }
+
     protected static function booted()
     {
         parent::booted();
-        /**
-         * Implementing cascade delete on model
-         */
+
         self::deleting(function (User $user){
             try {
+                //Implementing cascade delete on model
                 $user->treasure_hunts->map(fn($treasureHunt)=>$treasureHunt->deleteOrFail());
+                //Deleting profile picture from storage
+                if((!User::isImagePathDefault($user->profile_image)) && (Storage::exists($user->profile_image))){
+                    Storage::delete($user->profile_image);
+                }
             }catch (\Exception $exception){
                 Log::log('error',$exception->getMessage());
             }
@@ -81,6 +93,38 @@ class User extends Authenticatable
      */
     public function proClues(){
         return $this->clues()->where(fn($clue)=>$clue->isPro());
+    }
+
+    /**
+     * Returns an array of all the available default profile images
+     * @return array
+     */
+    public static function getDefaultProfileImagesPaths(){
+        $rootPath = "defaults/user/profileImages/";
+        $paths = [];
+        for($i = 1; $i<5;$i++){
+            $paths[]=$rootPath."defaultProfileImage".$i.".jpg";
+        }
+        return $paths;
+    }
+
+    /**
+     * Returns a random default profile images
+     * @return string
+     */
+    public static function getRandomProfileImagePath(){
+        $defaultImages = self::getDefaultProfileImagesPaths();
+        return $defaultImages[array_rand($defaultImages)];
+    }
+
+    /**
+     * Returns if an image is a default one
+     * @param $imagePath
+     * @return bool
+     */
+    public static function isImagePathDefault($imagePath){
+        $rootPath = "defaults/user/profileImages/";
+        return str_contains($imagePath,$rootPath);
     }
 
     /**

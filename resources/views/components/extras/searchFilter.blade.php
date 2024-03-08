@@ -1,5 +1,5 @@
 @props(['tooltip'])
-<form method="get" action="{{$_SERVER['PHP_SELF']}}" id="loginForm">
+<form method="get" action="{{request()->url()}}" id="loginForm">
     <div class="input-group">
         <div class="form-floating"
              data-bs-toggle="tooltip" data-bs-placement="top"

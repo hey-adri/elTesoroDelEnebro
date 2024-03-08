@@ -39,7 +39,7 @@
                 <form method="POST" action="{{route('clue.destroy',['clue'=>$clue->clueKey])}}" class="deleteClueForm d-inline-block w-100">
                     @method("DELETE")
                     @csrf
-                    <button type="submit" class="deleteClueButton btn btn-outline-danger w-100" data-clueTitle="{{$clue->title}}"
+                    <button type="submit" class="deleteClueButton btn btn-outline-danger w-100" data-clueTitle="{{$clue->title}}"  data-clueKey="{{$clue->clueKey}}"
                             data-bs-toggle="tooltip" data-bs-placement="top"
                             data-bs-title="{{__('Eliminar ')}} {{$clue->title}}"
                     ><i class="fa-solid fa-trash"></i> {{__('Eliminar')}}</button>

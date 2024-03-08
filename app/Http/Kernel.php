@@ -2,7 +2,10 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CluesOwnersOnly;
+use App\Http\Middleware\CurrentUserOnly;
 use App\Http\Middleware\Localization;
+use App\Http\Middleware\TreasureHuntsOwnersOnly;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -66,6 +69,9 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'localize'=>Localization::class
+        'localize'=>Localization::class,
+        'cluesOwnerOnly'=>CluesOwnersOnly::class,
+        'treasureHuntOwnersOny'=>TreasureHuntsOwnersOnly::class,
+        'currentUserOnly'=>CurrentUserOnly::class
     ];
 }

@@ -1,7 +1,6 @@
 <x-layout.baseLayout>
     <x-slot name="links"></x-slot>
     <x-slot name="content">
-
             <div class="row g-5 justify-content-center">
                 <div class="col-12 max-width-sm">
                     <article>
@@ -160,23 +159,24 @@
                             password: {
                                 required: true,
                                 maxlength:255,
-                                password: true,
+                                passwordCheck: true,
                             },
                             rePassword:{
                                 required: true,
                                 maxlength:255,
                                 equalTo:'#password',
-                                password: true,
+                                passwordCheck: true,
                             }
                         },
-                        submitHandler: (form) => { //! Si no hay ningún error se corre el bloque submitHandler
+                        submitHandler: (form) => {
+                            showLoading(`{{__("Sólo será un momentito.")}}`,`{{__("Creando tu Cuenta...")}}`)
                             form.submit()
                         }
                     }
                 );
                 $.validator.messages.emailV2 = '{{__("Por favor, introduce in email válido.")}}';
                 $.validator.messages.username = '{{__("Debe tener entre 4 y 30 carácteres. Sólo letras minúsculas, dígitos y . _ -")}}';
-                $.validator.messages.password = '{{__("Debe tener entre 8 y 30 carácteres. Sólo letras, espacios, dígitos y cualquier carácter especial.")}}';
+                $.validator.messages.passwordCheck = '{{__("Debe tener entre 8 y 30 carácteres. Sólo letras, espacios, dígitos y cualquier carácter especial.")}}';
             };
 
 

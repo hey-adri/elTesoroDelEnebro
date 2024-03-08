@@ -38,36 +38,7 @@
         </a>
     </x-slot>
     <x-slot name="scripts">
-        <script>
-            {{-- Adding Confirmation to delete Buttons --}}
-            document.addEventListener('DOMContentLoaded',()=>{
-                $('.deleteClueButton').on('click',askForClueDeleteConfirmation)
-                $('.deleteTreasureHuntButton').on('click',askForTreasureHuntDeleteConfirmation)
-            })
-            const askForClueDeleteConfirmation = ()=>{
-                event.preventDefault()
-                const form = $(event.target).closest('form');
-                showDeleteDialog(
-                    `{{__('Vas a eliminar')}} "${$(event.target).attr(`data-clueTitle`)}".`,
-                    `{{__('¿Estás Seguro?')}}`,
-                    `{{__('Sí, eliminar')}}`,
-                    `{{__('No, cancelar')}}`,
-                    ()=>{form.submit()},
-                    ()=>{console.log('cancel')}
-                )
-            }
-            const askForTreasureHuntDeleteConfirmation = ()=>{
-                event.preventDefault()
-                const form = $(event.target).closest('form');
-                showDeleteDialog(
-                    `{{__('Vas a eliminar')}} "${$(event.target).attr(`data-treasureHuntTitle`)}". {{__('¡Se eliminarán todas las pistas asociadas!')}}`,
-                    `{{__('¿Estás Seguro?')}}`,
-                    `{{__('Sí, eliminar')}}`,
-                    `{{__('No, cancelar')}}`,
-                    ()=>{form.submit()},
-                    ()=>{console.log('cancel')}
-                )
-            }
-        </script>
+        <x-treasureHunt.deleteConfirmationScript/>
+        <x-clue.deleteConfirmationScript/>
     </x-slot>
 </x-layout.baseLayout>

@@ -1,7 +1,7 @@
 <x-layout.baseLayout>
     <x-slot name="links"></x-slot>
     <x-slot name="content">
-        <div class="row g-5">
+      <div class="row g-5">
             <x-user.userInformation :user="auth()->user()"></x-user.userInformation>
             <section class="treasureHuntsSection">
                 <div class="col-12 d-flex justify-content-center">
@@ -23,24 +23,6 @@
                         <div class="my-4">
                             {{$treasure_hunts->appends(request()->all())->links()}}
                         </div>
-                        <script>
-                            {{-- Adding Confirmation to delete Buttons --}}
-                            document.addEventListener('DOMContentLoaded',()=>{
-                                $('.deleteTreasureHuntButton').on('click',askForDeleteConfirmation)
-                            })
-                            const askForDeleteConfirmation = ()=>{
-                                event.preventDefault()
-                                const form = $(event.target).closest('form');
-                                showDeleteDialog(
-                                    `{{__('Vas a eliminar')}} "${$(event.target).attr(`data-treasureHuntTitle`)}". {{__('¡Se eliminarán todas las pistas asociadas!')}}`,
-                                    `{{__('¿Estás Seguro?')}}`,
-                                    `{{__('Sí, eliminar')}}`,
-                                    `{{__('No, cancelar')}}`,
-                                    ()=>{form.submit()},
-                                    ()=>{console.log('cancel')}
-                                )
-                            }
-                        </script>
                         @else
                             <x-extras.nothingFound :text="__('Parece que no hay ninguna Búsqueda del Tesoro por aquí...')"/>
                             <div class="row mt-4">
@@ -55,5 +37,7 @@
         </div>
     </x-slot>
     <x-slot name="floatingButtons"></x-slot>
-    <x-slot name="scripts"></x-slot>
+    <x-slot name="scripts">
+        <x-treasureHunt.deleteConfirmationScript/>
+    </x-slot>
 </x-layout.baseLayout>

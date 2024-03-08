@@ -8,7 +8,7 @@
                         <div class="d-flex flex-column flex-md-row gap-2">
                             <div class="d-flex align-items-center">
                                 <div class="userProfilePhoto roundPhoto max-width-60 mx-auto">
-                                    <img class="" src="{{$user->profile_image}}">
+                                    <img class="" src="{{asset('storage/'.$user->profile_image)}}">
                                 </div>
                             </div>
                             <ul class="list-unstyled text-center text-md-start d-flex flex-column gap-1">
@@ -19,7 +19,7 @@
                         </div>
                         <div class="row row-cols-1 g-2">
                             <div class="col">
-                                <a class="btn btn-outline-success btn-sm w-100" href="{{route('user.show',auth()->user())}}"
+                                <a class="btn btn-outline-success btn-sm w-100" href="{{route('user.edit',auth()->user())}}"
                                    data-bs-toggle="tooltip" data-bs-placement="top"
                                    data-bs-title="{{__('Modifica tus Datos, Cambia tu Contraseña o Elimina tu Cuenta')}}"
                                 ><i class="fa-solid fa-user-gear"></i></i> {{__('Gestionar Cuenta')}}</a>
@@ -61,28 +61,7 @@
                             </div>
 
                         </div>
-{{--                        <hr class="d-md-none">--}}
-{{--                        <div class="vr d-none d-md-block"></div>--}}
-
                     </div>
-{{--                    <div class="w-100 text-center d-flex flex-column flex-md-row justify-content-evenly">--}}
-{{--                        <ul class="list-unstyled mb-0">--}}
-{{--                            <li class="handwritten">{{__('Tus Búsquedas Del Tesoro')}}</li>--}}
-{{--                            <li>{{$user->treasure_hunts()->count()}}</li>--}}
-{{--                        </ul>--}}
-{{--                        <hr class="d-md-none">--}}
-{{--                        <div class="vr d-none d-md-block"></div>--}}
-{{--                        <ul class="list-unstyled mb-0">--}}
-{{--                            <li class="handwritten">{{__('Tus Pistas')}}</li>--}}
-{{--                            <li>{{$user->clues()->count()}}</li>--}}
-{{--                        </ul>--}}
-{{--                        <hr class="d-md-none">--}}
-{{--                        <div class="vr d-none d-md-block"></div>--}}
-{{--                        <ul class="list-unstyled mb-0">--}}
-{{--                            <li class="handwritten">{{__('Pistas Pro Utilizadas')}}</li>--}}
-{{--                            <li>{{count($user->proClues())}} / {{$user->max_pro_clues}}</li>--}}
-{{--                        </ul>--}}
-{{--                    </div>--}}
                 </div>
             </div>
         </article>

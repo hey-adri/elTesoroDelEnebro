@@ -4,6 +4,7 @@ namespace App\Models\Clue;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class ClueImage extends Model
 {
@@ -15,8 +16,10 @@ class ClueImage extends Model
     {
         parent::booted();
         self::deleting(function (ClueImage $clueImage){
-            //Todo delete clue image from Storage
-            echo 'Todo delete clue image: '.$clueImage->title;
+            //Deleting image from storage on model deletion
+            if(Storage::exists($clueImage->src)){
+                Storage::delete($clueImage->src);
+            }
         });
     }
 

@@ -39,6 +39,49 @@ const showToast = (text, icon = 'success', timer = 5000) => {
  * @param {*} title
  * @param {*} icon
  */
+const showPopup = (text, title = null, icon = 'info', thenFunction = null, confirmButtonText = 'OK') => {
+    Swal.fire({
+        title,
+        text,
+        icon,
+        confirmButtonText
+    }).then(() => {
+            thenFunction?.apply()
+        }
+    )
+}
+
+/**
+ * Displays a popup until the user clicks the close button
+ * @param {*} text
+ * @param {*} title
+ * @param {*} icon
+ */
+const showLoading = (text, title) => {
+    Swal.fire({
+        showConfirmButton:false,
+        // title,
+        // text,
+        html:`
+        <div>
+            <h1 class="display-3">${title}</h1>
+            <div class="my-3">
+                <div class='loaderContainer'><div class='loader'></div></div>
+            </div>
+            <p class="text-body">${text}</p>
+        </div>
+        `,
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+    })
+}
+
+/**
+ * Displays a popup until the user clicks the close button
+ * @param {*} text
+ * @param {*} title
+ * @param {*} icon
+ */
 const showDeleteDialog = (text, title = null , deleteButtonText, cancelButtonText, deleteFunction, cancelledFunction=null) => {
     Swal.fire({
         title,
@@ -58,6 +101,26 @@ const showDeleteDialog = (text, title = null , deleteButtonText, cancelButtonTex
             }
         }
     )
+}
+
+const showAccountDeleteDialog = async (text, title, deleteButtonText, warning, acceptFunction ) => {
+    const { value: accept } = await Swal.fire({
+        title,
+        input: "checkbox",
+        inputValue: 0,
+        inputAutoFocus:false,
+        inputPlaceholder: text,
+        confirmButtonColor: `#B31312`,
+        confirmButtonText: `
+        ${deleteButtonText}&nbsp;<i class="fa fa-trash"></i>
+      `,
+        inputValidator: (result) => {
+            return !result && warning;
+        }
+    });
+    if (accept) {
+       acceptFunction.apply()
+    }
 }
 
 //! Animation Functions
@@ -180,8 +243,46 @@ const setUpCustomValidators = ()=>{
     /**
      * Passwords can have letters a-zA-Z, spaces, including ñ and accented vowels, digits and any special characters, must be between 4-30 chars.
      */
-    $.validator.addMethod("password", function (value, element) {
+    $.validator.addMethod("passwordCheck", function (value, element) {
         const re = new RegExp(/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\d$&+,:;=?@#|'<>.^*()%! -]{8,30}$/)
         return this.optional(element) || re.test(element.value);
     });
+
+}
+
+/**
+ * Makes secondary inputs dependent on a primary.
+ * When the primary input has no value, the secondary ones will be disabled and wiped
+ * When the primary input has value, the secondary ones will be enabled
+ * @param primaryInputSelector
+ * @param secondaryInputsSelector
+ */
+const makeInputDependentOn = (primaryInputSelector,secondaryInputsSelector)=>{
+    let primaryInput = $(primaryInputSelector).find('input')
+    if(primaryInput.length===0)  primaryInput = $(primaryInputSelector)
+    let secondaryInputs = $(secondaryInputsSelector).find('input')
+    if(secondaryInputs.length===0)  secondaryInputs = $(secondaryInputsSelector)
+    const check = ()=>{
+        if(primaryInput.val()!=='') {
+            secondaryInputs.prop('disabled',false)
+        }
+        else {
+            secondaryInputs.prop('disabled',true).val('')
+        }
+    }
+    primaryInput.on('input',check)
+    check()
+}
+
+/**
+ * Checks that an input type file doesn't exceed the maximum size in KB
+ * @param inputSelector
+ * @param maxSizeInKB
+ * @returns {boolean}
+ */
+const checkInputFileSize=(inputSelector, maxSizeInKB)=>{
+    const input = document.querySelector(inputSelector);
+    if (!input) return false;
+    if(input.value=="") return true;
+    return input.files[0].size<= (maxSizeInKB*1000)
 }

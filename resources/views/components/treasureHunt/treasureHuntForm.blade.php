@@ -77,6 +77,7 @@
                     },
                 },
                 submitHandler: (form) => { //! Si no hay ningún error se corre el bloque submitHandler
+                    showLoading(`{{__("Sólo será un momentito.")}}`,`{{__("Enviando Datos ...")}}`)
                     form.submit()
                 }
             }
