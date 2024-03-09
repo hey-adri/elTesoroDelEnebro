@@ -256,24 +256,49 @@ const setUpCustomValidators = ()=>{
  * When the primary input has value, the secondary ones will be enabled
  * @param primaryInputSelector
  * @param secondaryInputsSelector
+ * @param clearOnPrimaryEmpty If inputs should be cleared after parent is empty
  */
-const makeInputDependentOn = (primaryInputSelector,secondaryInputsSelector)=>{
-    let primaryInput = $(primaryInputSelector).find('input')
-    if(primaryInput.length===0)  primaryInput = $(primaryInputSelector)
-    let secondaryInputs = $(secondaryInputsSelector).find('input')
-    if(secondaryInputs.length===0)  secondaryInputs = $(secondaryInputsSelector)
-    const check = ()=>{
-        console.log(primaryInput.val())
-        if(primaryInput.val()!=='') {
-            secondaryInputs.prop('disabled',false)
-        }
-        else {
-            secondaryInputs.prop('disabled',true).val('')
-        }
-    }
-    primaryInput.on('input change',check)
-    check()
+const makeInputDependentOn = (primaryInputSelector,secondaryInputsSelector,clearOnPrimaryEmpty = true)=>{
+    let primaryInput = getInputFromSelector(primaryInputSelector)
+
+    primaryInput.on('input change',()=>{
+        checkDependentInputs(primaryInputSelector,secondaryInputsSelector, clearOnPrimaryEmpty)
+    })
+    checkDependentInputs(primaryInputSelector,secondaryInputsSelector, clearOnPrimaryEmpty)
 }
+
+/**
+ * Makes an instant check and:
+ * When the primary input has no value, the secondary ones will be disabled and wiped
+ * When the primary input has value, the secondary ones will be enabled
+ * @param primaryInputSelector
+ * @param secondaryInputsSelector
+ * @param clearOnPrimaryEmpty If inputs should be cleared after parent is empty
+ */
+const checkDependentInputs = (primaryInputSelector,secondaryInputsSelector, clearOnPrimaryEmpty = true)=>{
+    let primaryInput = getInputFromSelector(primaryInputSelector)
+    let secondaryInputs = getInputFromSelector(secondaryInputsSelector)
+    if(secondaryInputs.length===0)  secondaryInputs = $(secondaryInputsSelector)
+    if(primaryInput.val()!=='') {
+        secondaryInputs.prop('disabled',false)
+    }
+    else {
+        secondaryInputs.prop('disabled',true)
+        if(clearOnPrimaryEmpty)secondaryInputs.val('')
+    }
+}
+
+/**
+ * Returns all the child inputs or the parent itself from a selection
+ * @param inputSelector
+ * @returns {*|jQuery}
+ */
+const getInputFromSelector = (inputSelector)=>{
+    let input = $(inputSelector).find('input')
+    if(input.length===0)  input = $(inputSelector)
+    return input;
+}
+
 
 /**
  * Checks that an input type file doesn't exceed the maximum size in KB
@@ -286,4 +311,15 @@ const checkInputFileSize=(inputSelector, maxSizeInKB)=>{
     if (!input) return false;
     if(input.value=="") return true;
     return input.files[0].size<= (maxSizeInKB*1000)
+}
+
+const selectForDeletion=(selector, apply=true)=>{
+    if (apply){
+        $(selector).addClass('selectedForDelete border border-5 border-danger')
+        scrollTo(selector)
+    }else{
+        $(selector).removeClass('selectedForDelete border border-5 border-danger')
+        scrollTo(selector)
+    }
+
 }

@@ -2,7 +2,10 @@
 <section class="col-12 d-flex justify-content-center treasureHuntInfo">
     <article class="paperCard max-width-lg w-100">
         <span class="{{$treasureHunt->isPro()?'badge-secondary':'badge'}}"><i class="fa-solid fa-book"></i> {{__('Búsqueda del Tesoro').($treasureHunt->isPro()?' '.__('PRO'):'')}}</span>
-        <h1 class="paperCardTitle mt-2">{{$treasureHunt->title}}</h1>
+        <div class="d-flex justify-content-start gap-2 align-items-center">
+            <span class="fs-3 text-primary pb-2"><i class="fa-solid fa-book"></i></span>
+            <h1 class="paperCardTitle d-inline-block">{{$treasureHunt->title}}</h1>
+        </div>
         <span class="text-body text-muted">
             <i class="fa-solid fa-clock-rotate-left"></i>
             {{__('Actualizada ')}} {{$treasureHunt->getLastUpdate()->diffForHumans()}}

@@ -2,6 +2,7 @@
 
 namespace App\Models\Clue;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
@@ -17,9 +18,7 @@ class ClueImage extends Model
         parent::booted();
         self::deleting(function (ClueImage $clueImage){
             //Deleting image from storage on model deletion
-            if(Storage::exists($clueImage->src)){
-                Storage::delete($clueImage->src);
-            }
+            self::deleteSrcFromStorage($clueImage);
         });
     }
 
@@ -29,5 +28,16 @@ class ClueImage extends Model
      */
     public function clue(){
         return $this->belongsTo(Clue::class,'clue_id');
+    }
+
+    /**
+     * Deletes the src referenced file
+     * @return void
+     */
+    public static function deleteSrcFromStorage(ClueImage $clueImage){
+        //We'll delete the old referenced file if it can be deleted
+        if($clueImage->src && Storage::exists($clueImage->src)){
+            Storage::delete($clueImage->src);
+        }
     }
 }

@@ -5,7 +5,7 @@
             <a class="navbar-brand text-primary d-flex align-items-center flex-grow-1" href="{{route('home')}}">
                 <img src="{{asset('/assets/img/logos/logoPrimary.svg')}}" class="headerLogo" alt="" srcset="">
                 <h1 class="m-0 pt-2 pt-md-0 text-center flex-grow-1 flex-md-grow-0 text-md-start">
-                {{__('El Tesoro del Enebro')}}
+                    {{__('El Tesoro del Enebro')}}
                 </h1>
             </a>
             <button class="btn btn-outline-primary border-0 d-md-none" type="button" data-bs-toggle="offcanvas"
@@ -28,13 +28,15 @@
                 <div class="offcanvas-body">
                     <ul class="navbar-nav gap-4 justify-content-end align-items-start flex-grow-1 p-3">
                         <li class="nav-item text-primary">
-                            <a class="nav-link {{request()->routeIs(['home','home.*'])?'active':''}}" aria-current="page" href="{{route('home')}}">
+                            <a class="nav-link {{request()->routeIs(['home','home.*'])?'active':''}}"
+                               aria-current="page" href="{{route('home')}}">
                                 <i class="fa-solid fa-house"></i>
                                 {{__('Home')}}
                             </a>
                         </li>
                         <li class="nav-item text-primary dropdown">
-                            <button class="nav-link  dropdown-toggle {{request()->routeIs(['sessions.*','userArea.*'])?'active':''}}" role="button"
+                            <button class="nav-link  dropdown-toggle {{request()->routeIs(['sessions.*','userArea.*'])?'active':''}}"
+                                    role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-solid fa-user m-1"></i>
                                 {{__('Cuenta')}}
@@ -45,7 +47,8 @@
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
-                                    <li><a class="dropdown-item {{request()->routeIs(['userArea.*'])?'fw-bold':''}}" href="{{route('userArea.index')}}">Área Personal</a></li>
+                                    <li><a class="dropdown-item {{request()->routeIs(['userArea.*'])?'fw-bold':''}}"
+                                           href="{{route('userArea.index')}}">Área Personal</a></li>
                                     <li class="dropdown-item text-center bg-body">
                                         <a href="{{route('logout')}}" class="btn btn-danger">
                                             <i class="fa-solid fa-right-from-bracket m-1"></i>
@@ -68,7 +71,7 @@
                                 @endauth
                             </ul>
                         </li>
-                        @include('partials.languageSwitcher')
+                        <x-extras.languageSwitcher/>
                     </ul>
                 </div>
             </div>

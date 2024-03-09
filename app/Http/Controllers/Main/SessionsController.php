@@ -17,6 +17,11 @@ class SessionsController extends Controller
     }
 
 
+    /**
+     * Checks if credentials from login are OK and logs the user in
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws ValidationException
+     */
     public function store (){
         //Validating the request fields
         $attributes = request()->validate(
@@ -43,6 +48,10 @@ class SessionsController extends Controller
         ]);
     }
 
+    /**
+     * Logs the user out
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function destroy(){
         auth()->logout();
         return redirect(route('home'))->with('toast',[

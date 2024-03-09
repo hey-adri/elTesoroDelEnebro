@@ -23,17 +23,7 @@
                     <span class="d-none d-sm-inline-block">{{__('Filtros')}}</span>
                 </button>
                 <div class="dropdown-menu p-4">
-                    <div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" name="filters[]" value="ProOnly" id="proOnly" {{
-                                                    in_array('ProOnly',(request('filters')?request('filters'):[]))
-                                                    ?'checked':''
-                                                    }}>
-                            <label class="form-check-label" for="proOnly">
-                                {{__('Sólo Mostrar')}} <span class="badge-secondary ms-2"><i class="fa-solid fa-book"></i>{{__('PRO')}}</span>
-                            </label>
-                        </div>
-                    </div>
+                    {{$filters}}
                 </div>
             </div>
             <button type="submit" class="btn btn-primary my-0 h-100">

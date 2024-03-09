@@ -13,89 +13,66 @@ use Illuminate\Support\Facades\Log;
 
 class ClueController extends Controller
 {
-    public function index(){
-        return 'todo';
-//        $treasure_hunts = TreasureHunt::latest()->where('user_id','=',auth()->user()->id)->paginate(3);
-//        return view('treasureHunts.userArea.index',[
-//            'treasure_hunts'=>$treasure_hunts
-//        ]);
-    }
+    //index is performed in the same view as treasureHunt.show
+
+    /**
+     * Shows the preview of one clue after the user inputs its clueKey
+     * @param Clue $clue
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function show(Clue $clue){
-        return 'todo';
-//        return view('treasureHunts.show',[
-//            'treasureHunt'=>$treasureHunt
-//        ]);
-    }
-    public function create(TreasureHunt $treasureHunt){
-        return view('clues.create',[
-            'treasureHunt'=>$treasureHunt
+        return view('clues.show',[
+            'clue'=>$clue,
+            'clueKey'=>$clue->clueKey,
+            'backTo'=>[
+                'route'=>route('treasureHunt.show',['treasureHunt'=>$clue->treasure_hunt]),
+                'icon'=>'fa-book',
+                'name'=>$clue->treasure_hunt->title
+            ],
         ]);
     }
+
+    /**
+     * Returns the view clues.create
+     * @param TreasureHunt $treasureHunt
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
+    public function create(TreasureHunt $treasureHunt){
+        return view('clues.create',[
+            'treasureHunt'=>$treasureHunt,
+            'backTo'=>[
+                'route'=>route('treasureHunt.show',['treasureHunt'=>$treasureHunt]),
+                'icon'=>'fa-book',
+                'name'=>$treasureHunt->title
+            ],
+        ]);
+    }
+
+    /**
+     * Stores a new clue as a treasureHunt child
+     * @param TreasureHunt $treasureHunt
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function store(TreasureHunt $treasureHunt){
-        //Validating core Attributes
-        $clueAttributes = request()->validate(
-            [
-                "title"=>["required"],
-                "body"=>["required"],
-                "footNote"=>["max:255"],
-                "help"=>[]
-            ]
-        );
-        //Validating interDependent attributes
-        //UnlockKey
-        if (!empty(request('unlockKey'))){
-            request()->validate(
-                [
-                    "unlockKey"=>["max:255"],
-                    "unlockHint"=>["required","max:255"],
-                ]
-            );
-            $clueAttributes["unlockKey"] = request('unlockKey');
-            $clueAttributes["unlockHint"] = request('unlockHint');
-        }
-        //Clue EmbeddedVideo
-        $videoAttributes = [];
-        if(!empty(request('embedded_video_src'))){
-            $videoValidation = \request()->validate([
-                "embedded_video_src"=>["regex:/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|live\/|v\/)?)([\w\-]+)(\S+)?$/"],
-                "embedded_video_title"=>["max:255"],
-                "embedded_video_caption"=>["max:255"],
-            ]);
-            //Saving the new image and storing to imageAttributes
-            $videoAttributes['src'] = $videoValidation['embedded_video_src'];
-            $videoAttributes["title"] = $videoValidation['embedded_video_title'];
-            $videoAttributes["caption"] = $videoValidation['embedded_video_caption'];
-        }
-        //Clue Image
-        $imageAttributes = [];
-        if(!empty(request('image_src'))){
-            $imageValidation = \request()->validate([
-                "image_src"=>["image","max:".env('MAX_CLUE_IMAGE_SIZE')],
-                "image_title"=>["max:255"],
-                "image_caption"=>["max:255"],
-            ]);
-            //Saving the new image and storing to imageAttributes
-            $imageAttributes['src'] = request()->file('image_src')->store('clues/images');
-            $imageAttributes["title"] = $imageValidation['image_title'];
-            $imageAttributes["image_caption"] = $imageValidation['image_caption'];
-        }
+        //Validating clueAttributes
+        $clueAttributes = self::validateCurrentRequest('create');
+        //Validating clueEmbeddedVideo
+        $clueEmbeddedVideoAttributes = ClueEmbeddedVideoController::validateCurrentRequest('create');
+        //Validating clueImage
+        $clueImageAttributes = ClueImageController::validateCurrentRequest('create');
         //Sanitizing input
         HelperController::sanitizeArray($clueAttributes);
-        HelperController::sanitizeArray($clueAttributes);
-        $clueAttributes['treasure_hunt_id'] = $treasureHunt->id;
+        HelperController::sanitizeArray($clueImageAttributes);
+        HelperController::sanitizeArray($clueEmbeddedVideoAttributes);
+
         try {
             //Creating and storing the clue
+            $clueAttributes['treasure_hunt_id'] = $treasureHunt->id;
             $clue = Clue::create($clueAttributes);
-            //Creating video if set
-            if(!empty($videoAttributes)){
-                $videoAttributes['clue_id'] = $clue->id;
-                ClueEmbeddedVideo::create($videoAttributes);
-            }
-            //Creating Image if set
-            if(!empty($imageAttributes)){
-                $imageAttributes['clue_id'] = $clue->id;
-                ClueImage::create($imageAttributes);
-            }
+            //Creating clueEmbeddedVideo if requested to
+            ClueEmbeddedVideoController::createUpdateOrDeleteOnRequest($clueEmbeddedVideoAttributes, $clue);
+            //Creating clueImage if requested to
+            ClueImageController::create($clueImageAttributes,$clue);
             //Redirecting to the parent treasureHunt
             return redirect(route('treasureHunt.show',['treasureHunt'=>$treasureHunt->id]))->with('toast',[
                 'icon' => 'success',
@@ -110,57 +87,112 @@ class ClueController extends Controller
         }
     }
 
+    /**
+     * Returns the clues.edit view
+     * @param Clue $clue
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function edit(Clue $clue){
-//        return view('treasureHunts.edit',['treasureHunt'=>$treasureHunt]);
-        return 'todo';
+        return view('clues.edit',[
+            'clue'=>$clue,
+            'backTo'=>[
+                'route'=>route('treasureHunt.show',['treasureHunt'=>$clue->treasure_hunt]),
+                'icon'=>'fa-book',
+                'name'=>$clue->treasure_hunt->title
+            ],
+        ]);
     }
 
+    /**
+     * Updates a clue, performing a CRUD of its embeddedVideo and image, redirects to treasureHunt.show
+     * @param Clue $clue
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function update(Clue $clue){
-//        $attributes = request()->validate(
-//            [
-//                "title"=>["required","max:255"],
-//            ]
-//        );
-//        HelperController::sanitizeArray($attributes); //Sanitizing input
-//        try {
-//            //Updating the treasureHunt
-//            $treasureHunt->updateOrFail($attributes);
-//            //Redirecting to the updated treasureHunt
-//            return redirect(route('treasureHunt.show',['treasureHunt'=>$treasureHunt->id]))->with('toast',[
-//                'icon' => 'success',
-//                'text'=>$treasureHunt->title.__(' actualizada!')
-//            ]);
-//        } catch (\Throwable | Exception $exception) {
-//            Log::log('error',$exception->getMessage());
-//            return redirect()->back()->with('toast',[
-//                'icon' => 'error',
-//                'text'=>__('Vaya, ha habido un error.')
-//            ]);
-//        }
-        return 'todo';
+        //Validating clueAttributes
+        $clueAttributes = self::validateCurrentRequest('update');
+        //Validating clueEmbeddedVideo
+        $clueEmbeddedVideoAttributes = ClueEmbeddedVideoController::validateCurrentRequest(
+            ((!empty($clue->embedded_video))?'update':'create') //Validating creation or update depending on current clue state
+        );
+        //Validating clueImage
+        $clueImageAttributes = ClueImageController::validateCurrentRequest(
+            ((!empty($clue->image))?'update':'create') //Validating creation or update depending on current clue state
+        );
+        //Sanitizing input
+        HelperController::sanitizeArray($clueAttributes);
+        HelperController::sanitizeArray($clueImageAttributes);
+        HelperController::sanitizeArray($clueEmbeddedVideoAttributes);
+        try {
+            //Updating the clue
+            $clue->updateOrFail($clueAttributes);
+            //Updating, creating or deleting clue's extras depending on request
+            //clueEmbeddedVideo
+            ClueEmbeddedVideoController::createUpdateOrDeleteOnRequest($clueEmbeddedVideoAttributes, $clue);
+            //clueImage
+            ClueImageController::createUpdateOrDeleteOnRequest($clueImageAttributes, $clue);
+            //Redirecting to the updated treasureHunt
+            return redirect(route('treasureHunt.show',['treasureHunt'=>$clue->treasure_hunt->id]))->with('toast',[
+                'icon' => 'success',
+                'text'=>$clue->title.__(' actualizada!')
+            ]);
+        } catch (\Throwable | Exception $exception) {
+            Log::log('error',$exception->getMessage());
+            return redirect()->back()->with('toast',[
+                'icon' => 'error',
+                'text'=>__('Vaya, ha habido un error.')
+            ]);
+        }
     }
 
+    /**
+     * Deletes a clue and redirects to back() or to the route with the name specified in request('backTo')
+     * @param Clue $clue
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function destroy(Clue $clue){
-//        try {
-//            $treasureHunt->deleteOrFail();
-//
-//            //Allowing other routes to go back to if received
-//            $back =  redirect()->back();
-//            if(!empty(request('backTo'))){
-//                $back = redirect(route(request('backTo')));
-//            }
-//
-//
-//            return $back->with('toast', [
-//                'icon' => 'success',
-//                'text' => __('Has eliminado ') . $treasureHunt->title
-//            ]);
-//        } catch (\Throwable $e) {
-//            return redirect()->back()->with('toast', [
-//                'icon' => 'error',
-//                'text' => __('Ha habido un error en el borrado')
-//            ]);
-//        }
-        return 'todo';
+        try {
+            $clue->deleteOrFail();
+            //Allowing other routes to go back to if received
+            $back =  redirect()->back();
+            if(!empty(request('backTo'))){
+                $back = redirect(route(request('backTo')));
+            }
+            return $back->with('toast', [
+                'icon' => 'success',
+                'text' => __('Has eliminado ') . $clue->title
+            ]);
+        } catch (\Throwable $e) {
+            return redirect()->back()->with('toast', [
+                'icon' => 'error',
+                'text' => __('Ha habido un error en el borrado')
+            ]);
+        }
+    }
+
+    /**
+     * Validates and returns attributes array for update or create
+     * @param $method
+     * @return array to update, or create
+     */
+    public static function validateCurrentRequest($method='update'){
+        $attributes = [];
+        if ($method=='create'||$method=='update'){
+            //On creation
+            $validation = request()->validate(
+                [
+                    "title"=>["required"],
+                    "body"=>["required"],
+                    "footNote"=>["max:255"],
+                    "help"=>[],
+                    "unlockKey"=>["max:255"],
+                    "unlockHint"=>["max:255"],
+                ]
+            );
+            $attributes = $validation;
+            if(empty($attributes['unlockKey'])) $attributes['unlockKey'] = 'default';
+        }
+        return $attributes;
+
     }
 }

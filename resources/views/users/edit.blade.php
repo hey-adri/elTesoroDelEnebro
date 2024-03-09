@@ -27,7 +27,7 @@
                             @endif
 
 
-                            <div class="my-4">
+                            <div class="my-4 updateImageGroup">
                                 <div class="input-group">
                                     <div class="w-100">
                                         <label for="profile_image" class="form-label">
@@ -204,12 +204,23 @@
                     $('#deleteImageButton span').text(`{{__('Eliminar Imagen de Perfil')}}`);
                     $('#deleteImageButton').addClass('btn-outline-danger').removeClass('btn-warning');
                     $('#profile_image').prop('disabled',false)
+                    selectForDeletion('.userProfilePhoto',false)
+                    showPopup(`{{__('Borrado Cancelado')}}`,`{{__('Información')}}`,'info',
+                        ()=>{
+                        animateShow('.updateImageGroup')
+                        }
+                    )
                 }else{
                     $('#deleteImageButton span').text(`{{__('Cancelar Borrado')}}`);
                     $('#deleteImageButton').removeClass('btn-outline-danger').addClass('btn-warning')
                     $('#profile_image').val('')
                     $('#profile_image').prop('disabled',true)
-                    showPopup(`{{__('Tu Imagen de Perfil se borrará tras el guardado, todavía puedes cancelarlo.')}}`,`{{__('Atención')}}`,'warning')
+                    selectForDeletion('.userProfilePhoto',true)
+                    showPopup(`{{__('Tu Imagen de Perfil se borrará tras el guardado, todavía puedes cancelarlo.')}}`,`{{__('Atención')}}`,'warning',
+                        ()=>{
+                            animateHide('.updateImageGroup')
+                        }
+                    )
                 }
             }
 

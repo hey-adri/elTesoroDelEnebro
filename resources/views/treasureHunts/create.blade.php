@@ -10,10 +10,7 @@
             </div>
     </x-slot>
     <x-slot name="floatingButtons">
-        <a href="{{route('userArea.index')}}" class="btn btn-primary">
-            <i class="fa-solid fa-angle-left"></i>
-            {{__('Volver al Área Personal')}}
-        </a>
+        <x-extras.backButton :backTo="$backTo"/>
     </x-slot>
     <x-slot name="scripts">
     </x-slot>

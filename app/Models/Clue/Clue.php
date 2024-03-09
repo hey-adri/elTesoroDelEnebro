@@ -16,6 +16,47 @@ class Clue extends Model
     protected $guarded=['id'];
     protected $with = ['image','embedded_video'];
 
+    /**
+     * Scope filters supported:
+     * $filters = [
+     * 'has_image' => true,
+     * 'has_embedded_video' => false,
+     * 'pro' => true,
+     * 'username' => 'example_username',
+     * 'search' => 'example_search_string',
+     * ];
+     * @param $query
+     * @param array $filters
+     * @return mixed
+     */
+    public function scopeFilter($query, array $filters, $sortBy = 'updated_at', $sortDirection = 'desc')
+    {
+        return $query->when($filters['has_image'] ?? false, function ($query, $hasImage) {
+            return $query->whereHas('image');
+        })
+            ->when($filters['has_embedded_video'] ?? false, function ($query, $hasEmbeddedVideo) {
+                return $query->whereHas('embedded_video');
+            })
+            ->when($filters['pro'] ?? false, function ($query, $isPro) {
+                return $query->whereHas('image')
+                    ->orWhereHas('embedded_video');
+            })
+            ->when($filters['username'] ?? false, function ($query, $username) {
+                return $query->whereHas('treasure_hunt.owner', function ($query) use ($username) {
+                    $query->where('username', $username);
+                });
+            })
+            ->when($filters['search'] ?? false, function ($query, $search) {
+                return $query->where(function ($query) use ($search) {
+                    $query->where('title', 'like', '%' . $search . '%')
+                        ->orWhere('body', 'like', '%' . $search . '%')
+                        ->orWhere('help', 'like', '%' . $search . '%')
+                        ->orWhere('clueKey', 'like', '%' . $search . '%')
+                        ->orWhere('footNote', 'like', '%' . $search . '%');
+                });
+            })->orderBy($sortBy, $sortDirection);
+    }
+
     //Upon clue creation, we'll generate an unique clueKey, making sure it doesn't exist already
     protected static function boot()
     {
@@ -76,8 +117,7 @@ class Clue extends Model
      * @return bool
      */
     public function isPro(){
-        if(isset($this->image)||isset($this->embedded_video)) return true;
-        else return false;
+        return (($this->image)||($this->embedded_video));
     }
 
     /**

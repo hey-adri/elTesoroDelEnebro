@@ -13,6 +13,10 @@ use function Laravel\Prompts\search;
 
 class TreasureHuntController extends Controller
 {
+    /**
+     * Returns the user Area view showing all the user's avilable clues
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function index(){
         $user = auth()->user();
         /**
@@ -57,10 +61,16 @@ class TreasureHuntController extends Controller
          */
         $treasureHunts = $treasureHunts->paginate(6);
 
-        return view('treasureHunts.userArea.index',[
+        return view('treasureHunts.index',[
             'treasure_hunts'=>$treasureHunts
         ]);
     }
+
+    /**
+     * Returns the view treasureHunts.show which acts as index for the user's clues
+     * @param TreasureHunt $treasureHunt
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function show(TreasureHunt $treasureHunt){
         $clues = $treasureHunt->clues();
         /**
@@ -91,15 +101,36 @@ class TreasureHuntController extends Controller
         /**
          * Paginating
          */
-        $clues = $clues->paginate(5);
+        $clues = $clues->paginate(10);
         return view('treasureHunts.show',[
             'treasureHunt'=>$treasureHunt,
-            'clues'=>$clues
+            'clues'=>$clues,
+            'backTo'=>[
+                'route'=>route('userArea.index'),
+                'icon'=>'fa-user',
+                'name'=>__('Área Personal')
+            ],
         ]);
     }
+
+    /**
+     * Returns the view treasureHunts.create
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function create(){
-        return view('treasureHunts.create');
+        return view('treasureHunts.create',[
+            'backTo'=>[
+                'route'=>route('userArea.index'),
+                'icon'=>'fa-user',
+                'name'=>__('Área Personal')
+            ],
+        ]);
     }
+
+    /**
+     * Creates a new treasure hunt and redirects to treasureHunt.show of the created resource
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function store(){
         $attributes = request()->validate(
             [
@@ -127,10 +158,27 @@ class TreasureHuntController extends Controller
         }
     }
 
+    /**
+     * Returns the view treasureHunts.edit
+     * @param TreasureHunt $treasureHunt
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function edit(TreasureHunt $treasureHunt){
-        return view('treasureHunts.edit',['treasureHunt'=>$treasureHunt]);
+        return view('treasureHunts.edit',[
+            'treasureHunt'=>$treasureHunt,
+            'backTo'=>[
+            'route'=>route('treasureHunt.show',['treasureHunt'=>$treasureHunt]),
+            'icon'=>'fa-book',
+            'name'=>$treasureHunt->title
+        ],
+        ]);
     }
 
+    /**
+     * Updates a treasure hunt and returns to treasureHunt.show
+     * @param TreasureHunt $treasureHunt
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function update(TreasureHunt $treasureHunt){
         $attributes = request()->validate(
             [
@@ -155,10 +203,14 @@ class TreasureHuntController extends Controller
         }
     }
 
+    /**
+     * Deletes a treasure hunt and returns back to the last page, or, the route with the name that equals the request parameter "backTo"
+     * @param TreasureHunt $treasureHunt
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function destroy(TreasureHunt $treasureHunt){
         try {
             $treasureHunt->deleteOrFail();
-
             //Allowing other routes to go back to if received
             $back =  redirect()->back();
             if(!empty(request('backTo'))){
@@ -178,6 +230,7 @@ class TreasureHuntController extends Controller
         }
     }
 
+    //Todo
     public function generateQRCodes(TreasureHunt $treasureHunt){
         return 'Todo';
     }

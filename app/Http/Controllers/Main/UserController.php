@@ -14,57 +14,22 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
-    public function index(){
-        return 'todo';
-//        $treasure_hunts = TreasureHunt::latest()->where('user_id','=',auth()->user()->id)->paginate(3);
-//        return view('treasureHunts.userArea.index',[
-//            'treasure_hunts'=>$treasure_hunts
-//        ]);
-    }
-    public function show(User $user){
-        return 'todo';
-//        return view('treasureHunts.show',[
-//            'treasureHunt'=>$treasureHunt
-//        ]);
-    }
-    public function create(){
-//        return view('treasureHunts.create');
-        return 'todo';
-    }
-    public function store(){
-//        $attributes = request()->validate(
-//            [
-//                "title"=>["required","max:255"],
-//            ]
-//        );
-//        HelperController::sanitizeArray($attributes); //Sanitizing input
-//        $attributes['user_id'] = auth()->user()->id;
-//        try {
-//            //Creating and storing the treasureHunt
-//            $treasureHunt = TreasureHunt::create(
-//                $attributes
-//            );
-//            //Redirecting to the new treasureHunt
-//            return redirect(route('treasureHunt.show',['treasureHunt'=>$treasureHunt->id]))->with('toast',[
-//                'icon' => 'success',
-//                'text'=>$treasureHunt->title.__(' creada!')
-//            ]);
-//        } catch (Exception $exception) {
-//            Log::log('error',$exception->getMessage());
-//            return redirect()->back()->with('toast',[
-//                'icon' => 'error',
-//                'text'=>__('Vaya, ha habido un error.')
-//            ]);
-//        }
-        return 'todo';
-    }
-
+    /**
+     * Returns the users.edit view
+     * @param User $user
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
     public function edit(User $user){
         return view('users.edit',[
             'user'=>$user
         ]);
     }
 
+    /**
+     * Updates one user
+     * @param User $user
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(User $user){
         //Validating required attributes
         $attributes = request()->validate(

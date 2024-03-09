@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Models\Clue\Clue;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
@@ -18,6 +19,42 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $guarded = ['id'];
+
+
+    /**
+     *
+     * Scope filters supported:
+     *  $filters = [
+     *  'pro' => true,
+     *  'isAdmin' => true,
+     *  'search' => 'in username, name or email',
+     *  ];
+     * @param $query
+     * @param array $filters
+     * @return mixed
+     */
+    public function scopeFilter($query, array $filters, $sortBy = 'updated_at', $sortDirection = 'desc')
+    {
+        return $query->when($filters['pro'] ?? false, function (Builder $query) {
+            return $query->whereHas('treasure_hunts.clues', function (Builder $query) {
+                $query->whereHas('image')->orWhereHas('embedded_video');
+            });
+        })
+            ->when($filters['isAdmin'] ?? false, function (Builder $query) {
+                return $query->where('isAdmin', true);
+            })
+            ->when($filters['search'] ?? false, function (Builder $query, $search) {
+                return $query->where(function (Builder $query) use ($search) {
+                    $query->where('username', 'like', '%' . $search . '%')
+                        ->orWhere('name', 'like', '%' . $search . '%')
+                        ->orWhere('email', 'like', '%' . $search . '%');
+                });
+            })
+            ->orderBy($sortBy, $sortDirection);
+    }
+
+
+
 
     //Upon clue creation, we'll generate a random profile image if not set
     protected static function boot()
@@ -80,13 +117,32 @@ class User extends Authenticatable
      * @return Collection
      */
     public function clues(){
-        $treasureHunts = $this->treasure_hunts()->with('clues')->get();
-        $clues = new Collection([]);
-        foreach ($treasureHunts as $treasureHunt){
-            $clues = $clues->merge($treasureHunt->clues);
-        }
-        return $clues;
+        return Clue::whereIn('treasure_hunt_id', $this->treasure_hunts()->pluck('id'))->get();
     }
+
+    /**
+     * Returns the number of one user's clues with images
+     * @return mixed
+     */
+    public function countCluesWithImages()
+    {
+        return Clue::whereIn('treasure_hunt_id', $this->treasure_hunts()->pluck('id'))
+            ->whereHas('image')
+            ->count();
+    }
+
+    /**
+     * Returns the number of one user's clues with embedded_video
+     * @return mixed
+     */
+    public function countCluesWithEmbeddedVideos()
+    {
+        return Clue::whereIn('treasure_hunt_id', $this->treasure_hunts()->pluck('id'))
+            ->whereHas('embedded_video')
+            ->count();
+    }
+
+
 
     /**
      * Returns all the pro clues of this user
