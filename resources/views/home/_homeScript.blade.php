@@ -33,63 +33,7 @@
         //Emptying the main content and replacing it
         $('#mainContent').empty();
         $('#mainContent').append(
-            `
-    <!-- ! Welcome Page -->
-        <section class="welcomePage">
-            <div class="row g-5">
-                <div class="col-12 col-lg-8">
-                    <article class="paperCard">
-                        <h1 class="paperCardTitle">{{__('Bienvenido al Tesoro del Enebro')}}</h1>
-                        <p>{{__('Para participar en el Tesoro del Enebro, podrás escanear los códigos QR de las pistas proporcionadas por tus anfitriones.')}}</p>
-                        <p>{!!__('También podrás introducir manualmente la <b>clave indentificativa de tu pista</b> a continuación:')!!}</p>
-
-                        <!-- ! clueKeyForm -->
-                        <form method="post" action="#" class="clueKeyForm">
-                            <!-- Clue Key Input  -->
-                            <div class="mb-4">
-                                <div class="form-floating">
-                                    <!-- Input -->
-                                    <input id="clueKeyInput" type="text"
-                                        value="${configuration.clueKey}"
-                                        class="form-control" name="clueKeyInput"
-                                        placeholder=" " data-bs-toggle="tooltip" data-bs-placement="top"
-                                        data-bs-title="{{__('Introduce aquí la clave de la pista encontrada si no puedes escanear su código QR')}}">
-                                    <!-- Label -->
-                                    <label for="clueKeyInput" class="form-label" for="clueKeyInput">
-                                        <i class="fa-solid fa-qrcode"></i>
-                                        {{__('Clave Identificativa de Pista')}}
-                                    </label>
-                                </div>
-                                <!-- Error -->
-                                <div class="clueKeyErrors d-none my-4">
-                                    <div class="form-text text-danger">{{__('¡Vaya, no hemos encontrado ninguna pista asociada!')}}</div>
-                                </div>
-                            </div>
-                            <!-- Submit -->
-                            <div class="mb-4">
-                                <div class="row">
-                                    <div class="col">
-                                        <button id="analizeButton" type="submit"
-                                            class="btn btn-primary w-100 btn-lg" disabled>
-                                            <i class="fa-solid fa-magnifying-glass"></i>
-                                            <span>{{__('Analizar Clave')}}</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </article>
-                </div>
-                <div class="col-12 col-lg-4">
-                    <article class="paperCard">
-                        <h3 class="paperCardTitle display-5">{{__('¿Deseas Crear tu propia Búsqueda del Tesoro?')}}</h3>
-                        <p>{{__('Podrás crear tu propia búsqueda del tesoro entrando en')}} <a href="#Todo">{{__('Tu Área Personal')}}</a>.
-                        </p>
-                    </article>
-                </div>
-            </div>
-        </section>
-
+            `@include('home.partials._welcomePage')
     `
         )
         refreshBSTooltips();
@@ -193,77 +137,15 @@
      */
     const printUnlockForm = (data) => {
         let unlockFormView = `
-    <!-- ! unlockForm -->
-    <section class="unlockForm">
-        <div class="row g-5 justify-content-center">
-            <div class="col-12 max-width-md">
-                <article class="paperCard d-none">
-                    <h1 class="paperCardTitle">{{__('!Pista Encontrada!')}}</h1>
-                    <h2>${data.clue.title}</h2>
-                    <div class='formSlot'>
-                    </div>
-                </article>
-            </div>
-        </div>
-    </section>
+    @include('home.partials._unlockFormView')
     `;
         const customUnlockKeyForm =
             `
-    <div>
-        <p>{{__('Necesitarás introducir un código de desbloqueo para desbloquear esta pista:')}}</p>
-        <form method="post">
-            <!-- Custom Input unlockKeyInput -->
-            <div class="mb-4">
-                <div class="form-floating">
-                    <!-- Input -->
-                    <input id="unlockKeyInput" type="text" class="form-control" name="unlockKey"
-                        placeholder=" " data-bs-toggle="tooltip" data-bs-placement="top"
-                        data-bs-title="${data.unlock_hint}">
-                    <!-- Label -->
-                    <label for="unlockKeyInput" class="form-label" for="unlockKey">
-                        <i class="fa-solid fa-key"></i>
-                        {{__('Código de Desbloqueo')}}
-                    </label>
-                </div>
-                <!-- Error -->
-                <div class="form-text text-danger d-none unlockKeyErrors my-4">{{__('¡Vaya, Código de Desbloqueo incorrecto!')}}</div>
-            </div>
-            <!-- Submit -->
-            <div class="mb-4">
-                <div class="row">
-                    <div class="col">
-                        <button id="unlockButton" type="submit"
-                            class="btn btn-primary w-100 btn-lg" disabled>
-                            <i class="fa-solid fa-unlock-keyhole"></i>
-                            {{__('Desbloquear')}}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
+    @include('home.partials._customUnlockKeyForm')
     `;
 
         const defaultUnlockKeyForm = `
-    <div>
-        <p>¿Deseas desbloquear esta clave?</p>
-        <form method="post">
-            <!-- Default unlockKeyInput -->
-            <input type="hidden" name="unlockKey" id="unlockKeyInput" value="${configuration.unlockKey}">
-            <!-- Submit -->
-            <div class="mb-4">
-                <div class="row">
-                    <div class="col">
-                        <button id="unlockButton" type="submit"
-                            class="btn btn-primary w-100 btn-lg">
-                            <i class="fa-solid fa-unlock-keyhole"></i>
-                            <span>{{__('Desbloquear')}}</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
+    @include('home.partials._defaultUnlockKeyForm')
     `
         //Hiding the welcomePage if present
         animateDestroy('.welcomePage',configuration.animationMs)
@@ -387,19 +269,7 @@
         animateDestroy('.unlockForm',configuration.animationMs)
         const clue = configuration.clueFoundResponse.clue
         const cluePageView = `
-    <!-- ! cluePage -->
-    <div class="cluePage">
-        <section class="clueView">
-            <div class="row g-5 justify-content-center">
-                <div class="col-12 max-width-md">
-                    <article class="paperCard clue d-none">
-                        <h1 class="paperCardTitle">${clue.title}</h1>
-                        <h3>${configuration.clueFoundResponse.treasure_hunt.title}</h3>
-                    </article>
-                </div>
-            </div>
-        </section>
-    </div>
+    @include('home.partials._cluePage')
     `;
 
         //Adding the clue to the view
@@ -468,6 +338,16 @@
         `)
         }
 
+        $('.clue').append(
+            `<div class="d-flex justify-content-end gap-2 align-items-center w-100 my-2 opacity-75">
+                        <span class="handwritten fs-3">
+                            {{__('~ De')}} ${configuration.clueFoundResponse.owner.name}
+                        </span>
+                    <div class="userProfilePhoto roundPhoto max-width-30 flex-grow-0 flex-shrink-0">
+                        <img class="" src="${configuration.clueFoundResponse.owner.profile_image}">
+                    </div>
+                </div>`)
+
         //Animating clue show
         animateShow('.clue',configuration.animationMs)
         refreshBSTooltips();
@@ -481,7 +361,7 @@
     //Adds the clueHelpButton to UI
     const showClueHelpButton = () => {
         //Adding the button
-        $('.floatingButtons div').prepend(
+        $('.floatingButtons').prepend(
             `<button class="clueHelpButton btn btn-primary d-none">
         <i class="fa-solid fa-life-ring"></i>
         <span>{{__('¿Ayuda?')}}</span>
@@ -502,18 +382,7 @@
 
         if(configuration.clueFoundResponse.clue.help){
             $('.cluePage').append(`
-        <section class="clueHelpView">
-            <div class="row g-5 justify-content-center mt-2">
-                <div class="col-12 max-width-md">
-                    <article class="paperCard d-none">
-                        <h3 class="paperCardTitle">Ayuda</h3>
-                        <div class="textSection mb-4">
-                            ${formatAsParagraphs(configuration.clueFoundResponse.clue.help)}
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </section>
+        @include('home.partials._clueHelp')
         `)
             animateShow('.clueHelpView',configuration.animationMs)
             scrollTo(".clueHelpView .textSection")

@@ -9,7 +9,7 @@
         <script>
             showPopup(
                 `{{__('Estás en modo previsualización. Podrás ver lo que los participantes de tu búsqueda verán al escanear su código.')}}`,
-                `{{__('Mostrando pista:').' '.ucwords($clue->title)}}`,
+                `{{__('Previsualizando pista').' '.$clue->order.': '.ucwords($clue->title)}}`,
                 'success'
             )
         </script>

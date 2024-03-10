@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminClueController;
+use App\Http\Controllers\Admin\AdminTreaureHuntController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\API\ApiClueController;
 use App\Http\Controllers\Helpers\LocalizationController;
 use App\Http\Controllers\Home\HomeController;
@@ -77,22 +80,40 @@ Route::middleware(['auth'])->group(function(){
 
     //Users
     Route::middleware(['currentUserOnly'])->group(function (){
-        Route::get('/users/{user:username}',[UserController::class,'show'])->name('user.show');
-        Route::get('/user/{user:username}/edit',[UserController::class,'edit'])->name('user.edit');
-        Route::put('/user/{user:username}/update',[UserController::class,'update'])->name('user.update');
-        Route::delete('/user/{user:username}/destroy',[UserController::class,'destroy'])->name('user.destroy');
+        Route::get('/user/{user}/edit',[UserController::class,'edit'])->name('user.edit');
+        Route::put('/user/{user}/update',[UserController::class,'update'])->name('user.update');
+        Route::delete('/user/{user}/destroy',[UserController::class,'destroy'])->name('user.destroy');
     });
+
+    //Admins Section
+    //Todo middleWare
+    Route::get('admin/users',[AdminUserController::class,'index'])->name('admin.users.index');
+    Route::get('admin/user/{user}/edit',[AdminUserController::class,'edit'])->name('admin.users.edit');
+    Route::put('admin/user/{user}/edit',[AdminUserController::class,'update'])->name('admin.users.update');
+    Route::delete('admin/user/{user}/destroy',[AdminUserController::class,'destroy'])->name('admin.users.destroy');
+
+    //TreasureHunts
+    Route::get('admin/treasureHunts',[AdminTreaureHuntController::class,'index'])->name('admin.treasureHunts.index');
+    Route::delete('admin/treasureHunt/{treasureHunt}/destroy',[AdminTreaureHuntController::class,'destroy'])->name('admin.treasureHunts.destroy');
+    Route::get('admin/treasureHunt/{treasureHunt}/qrCodes',[AdminTreaureHuntController::class,'generateQRCodes'])->name('admin.treasureHunts.generateQRCodes');
+
+    //Clues
+    Route::get('admin/clues',[AdminClueController::class,'index'])->name('admin.clues.index');
+    Route::get('admin/clue/{clue:clueKey}',[AdminClueController::class,'show'])->name('admin.clues.show');
+    Route::delete('admin/clue/{clue:clueKey}/destroy',[AdminClueController::class,'destroy'])->name('admin.clues.destroy');
+
 
 
 
 });
+
+//Todo middleWareAdmin
 //Todo 4 QR codes
-//Todo 5 Admin section
-//Todo 6 Payments
+//Todo link area personal pantalla principal
 //Todo 7 Translate
-//Todo 8 See if queries in models and API can be optimized
-//Todo 9 don't forget php artisan storage:link
 Route::get('hola',function (){
-    ddd(User::first()->countCluesWithEmbeddedVideos());
+    ddd(\App\Models\TreasureHunt::withCount('clues')
+        ->orderByDesc('clues_count')
+        ->get());
 });
 

@@ -29,32 +29,70 @@ class TreasureHunt extends Model
      */
     public function scopeFilter($query, array $filters, $sortBy = 'updated_at', $sortDirection = 'desc')
     {
-        return $query->when($filters['pro'] ?? false, function (Builder $query, $pro) {
+        $query->when($filters['pro'] ?? false, function ( $query, $pro) {
             if ($pro) {
-                $query->whereHas('clues', function (Builder $query) {
+                $query->whereHas('clues', function ($query) {
                     $query->whereHas('image')->orWhereHas('embedded_video');
                 });
             }
         })
-            ->when($filters['username'] ?? false, function (Builder $query, $username) {
-                $query->whereHas('owner', function (Builder $query) use ($username) {
+            ->when($filters['has_images'] ?? false, function ( $query, $pro) {
+                if ($pro) {
+                    $query->whereHas('clues', function ($query) {
+                        $query->whereHas('image');
+                    });
+                }
+            })
+            ->when($filters['has_embedded_videos'] ?? false, function ( $query, $pro) {
+                if ($pro) {
+                    $query->whereHas('clues', function ($query) {
+                        $query->whereHas('embedded_video');
+                    });
+                }
+            })
+            ->when($filters['username'] ?? false, function ( $query, $username) {
+                $query->whereHas('owner', function ( $query) use ($username) {
                     $query->where('username', $username);
                 });
             })
-            ->when($filters['search'] ?? false, function (Builder $query, $search) {
-                $query->where(function (Builder $query) use ($search) {
+            ->when($filters['search'] ?? false, function ( $query, $search) {
+                $query->where(function ( $query) use ($search) {
                     $query->where('title', 'like', '%' . $search . '%')
-                        ->orWhereHas('owner', function (Builder $query) use ($search) {
+                        ->orWhereHas('owner', function ( $query) use ($search) {
                             $query->where('username', 'like', '%' . $search . '%');
                         });
                 });
             })
-            ->when($filters['searchInternal'] ?? false, function (Builder $query, $searchInternal) {
-                $query->whereHas('clues', function (Builder $query) use ($searchInternal) {
+            ->when($filters['search_internal'] ?? false, function ( $query, $searchInternal) {
+                $query->whereHas('clues', function ( $query) use ($searchInternal) {
                     $query->where('title', 'like', '%' . $searchInternal . '%');
                 });
-            })
-            ->orderBy($sortBy, $sortDirection);
+            });
+        if($sortBy=='updated_at'){
+            //Sorting by most recent, having in account treasureHunts and their clues, whichever is latest
+            if($sortDirection=='desc')
+            $query->orderByDesc(function ($query) {
+                $query->selectRaw('GREATEST(treasure_hunts.updated_at, COALESCE((SELECT MAX(updated_at) FROM clues WHERE treasure_hunt_id = treasure_hunts.id), \'1970-01-01 00:00:00\'))'); //Using coalesce to provide default date in case there are no clues
+            });
+            else
+            $query->orderBy(function ($query) {
+                $query->selectRaw('GREATEST(treasure_hunts.updated_at, COALESCE((SELECT MAX(updated_at) FROM clues WHERE treasure_hunt_id = treasure_hunts.id), \'9999-01-01 00:00:00\'))'); //Using coalesce to provide default date in case there are no clues
+            });
+        }else if ($sortBy === 'clues_count') {
+            // Sort by the number of associated clues
+                $query->withCount('clues')->orderBy('clues_count', $sortDirection);
+        }if ($sortBy === 'pro_clues_count') {
+            // Sort by the number of associated clues with images or embedded videos
+            $query->withCount(['clues' => function ($query) {
+                $query->whereHas('image')->orWhereHas('embedded_video');
+            }])
+            ->orderBy('clues_count', $sortDirection);
+        }else{
+            //Sort by attributes
+            $query->orderBy($sortBy, $sortDirection);
+        }
+        return $query;
+
     }
 
     protected static function booted()
@@ -110,20 +148,46 @@ class TreasureHunt extends Model
      * @return mixed
      */
     public function proClues(){
-        return $this->clues()->whereHas('image')->orWhereHas('embedded_video')->get();
+        return $this->clues()
+                ->where(function ($query) {
+                    $query->whereHas('image')->orWhereHas('embedded_video');
+                })
+                ->get();
     }
+
 
     /**
      * A treasure hunt is pro if it has pro clues
      * @return bool
      */
     public function isPro(){
-        if(count($this->proClues())>0) return true;
-        else return false;
+        return (($this->clues()->where(function ($query) {
+                $query->whereHas('image')->orWhereHas('embedded_video');
+            })->count())>0);
+    }
+
+    /**
+     * Get the count of pro clues
+     *
+     * @return int
+     */
+    public function proCluesCount()
+    {
+        return $this->clues()
+            ->where(function ($query) {
+                $query->whereHas('image')->orWhereHas('embedded_video');
+            })
+            ->count();
     }
 
 
+    public function countCluesWithImages(){
+        return $this->clues()->whereHas('image')->count();
+    }
 
+    public function countCluesWithEmbeddedVideos(){
+        return $this->clues()->whereHas('embedded_video')->count();
+    }
     protected function title(): Attribute
     {
         return Attribute::make(

@@ -1,29 +1,17 @@
 <x-layout.baseLayout>
     <x-slot name="links"></x-slot>
     <x-slot name="content">
-      <div class="row g-5">
-          <div class="col-12 d-flex justify-content-center">
-              <div class="paperCard max-width-lg w-100">
-                  <div class="d-flex justify-content-center gap-2 align-items-center">
-                      <span class="fs-3 text-primary pb-2"><i class="fa-solid fa-user"></i></span>
-                      <h1 class="display-4 d-inline-block m-0">{{__('Área Personal')}}</h1>
-                  </div>
-              </div>
-          </div>
-
-            <x-user.userInformation :user="auth()->user()"/>
+        <div class="row g-5">
             <section class="treasureHuntsSection">
                 <div class="col-12 d-flex justify-content-center">
                     <article class="paperCard max-width-lg w-100">
-                        <div class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-2 mb-4">
+                        <div class="d-flex flex-column flex-lg-row align-items-center justify-content-center gap-2 mb-2">
                             <div class="d-flex justify-content-center gap-2 align-items-center">
                                 <span class="fs-3 text-primary pb-2"><i class="fa-solid fa-book"></i></span>
-                                <h1 class="paperCardTitle d-inline-block">{{__('Tus Búsquedas del Tesoro')}}</h1>
+                                <h1 class="paperCardTitle d-inline-block">{{__('Administración de Búsquedas del Tesoro')}}</h1>
                             </div>
-
-                            <a href="{{route('treasureHunt.create')}}" class="btn btn-outline-primary"><i class="fa-solid fa-plus me-0"></i><i class="fa-solid fa-book"></i> {{__('Crear una Búsqueda del Tesoro')}}</a>
                         </div>
-                        <x-extras.searchFilter :tooltip="__('Buscar por título de la Búsqueda del Tesoro o el Título de sus Pistas...')">
+                        <x-extras.searchFilter :tooltip="__('Buscar por título o nombre de usuario...')">
                             <x-slot name="filters">
                                 <div>
                                     <div>
@@ -36,6 +24,24 @@
                                                 {{__('Sólo Mostrar Búsquedas')}} <span class="badge-secondary ms-2"><i class="fa-solid fa-book"></i>{{__('PRO')}}</span>
                                             </label>
                                         </div>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" name="filters[]" value="has_images" id="has_images" {{
+                                                    in_array('has_images',(request('filters')?request('filters'):[]))
+                                                    ?'checked':''
+                                                    }}>
+                                        <label class="form-check-label" for="has_images">
+                                            {{__('Con Imágenes')}} <i class="fa-solid fa-images"></i>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" name="filters[]" value="has_embedded_videos" id="has_embedded_videos" {{
+                                                    in_array('has_embedded_videos',(request('filters')?request('filters'):[]))
+                                                    ?'checked':''
+                                                    }}>
+                                        <label class="form-check-label" for="has_embedded_videos">
+                                            {{__('Con Vídeos')}} <i class="fa-brands fa-youtube"></i>
+                                        </label>
                                     </div>
                                 </div>
                                 <hr>
@@ -61,8 +67,8 @@
                                             <option value="updated_at" {{ ((request('sortBy')==''||(request('sortBy')=='updated_at'))?'selected':'')}}>
                                                 {{__('Recientes')}}
                                             </option>
-                                            <option value="pro_clues_count" {{ ((request('sortBy')=='pro_clues_count')?'selected':'')}}>
-                                                {{__('Número de Pistas Pro')}}
+                                            <option value="clues_count" {{ ((request('sortBy')=='clues_count')?'selected':'')}}>
+                                                {{__('Número de Pistas')}}
                                             </option>
                                             <option value="title" {{ ((request('sortBy')=='title')?'selected':'')}}>
                                                 {{__('Título')}}
@@ -74,25 +80,40 @@
                         </x-extras.searchFilter>
 
                         <hr>
-                        @if(count($treasure_hunts))
-                        <div class="treasureHuntsContainer row justify-content-evenly align-items-stretch row-cols-1 row-cols-sm-2 row-cols-lg-3">
-                            @foreach($treasure_hunts as $treasureHunt)
-                                <div class="col py-3">
-                                    <x-treasureHunt.treasureHuntInformationCompact :treasureHunt="$treasureHunt"/>
-                                </div>
-                            @endforeach
-                        </div>
-                        <div class="my-4">
-                            {{$treasure_hunts->appends(request()->all())->links()}}
-                        </div>
-                        @else
-                            <x-extras.nothingFound :text="__('Parece que no hay ninguna Búsqueda del Tesoro por aquí...')"/>
-                            <div class="row mt-4">
-                                <div class="col">
-                                    <a href="{{route('treasureHunt.create')}}" class="btn btn-outline-primary w-100"><i class="fa-solid fa-plus me-0"></i><i class="fa-solid fa-book"></i> {{__('Crear una Búsqueda del Tesoro')}}</a>
-                                </div>
+                        <div class="userTableContainer row justify-content-evenly">
+                            <div class="table-responsive">
+                                <table class="table table-striped align-middle text-center">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">{{__('Título')}}</th>
+                                        <th scope="col">{{__('Actualizada')}}</th>
+                                        <th scope="col">{{__('Usuario')}}</th>
+                                        <th scope="col">{{__('Pistas')}}</th>
+                                        <th scope="col">{{__('PRO')}}</th>
+                                        <th scope="col"><i class="fa-solid fa-images"></i></th>
+                                        <th scope="col"><i class="fa-brands fa-youtube"></i></th>
+                                        <th scope="col">{{__('Acciones')}}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @if(count($treasureHunts))
+                                        @foreach($treasureHunts as $treasureHunt)
+                                            <x-treasureHunt.treasureHuntRow :treasureHunt="$treasureHunt"/>
+                                        @endforeach
+                                    @else
+                                       <tr>
+                                           <td colspan="9">
+                                               <x-extras.nothingFound :text="__('Parece que no hay nada por aquí...')"/>
+                                           </td>
+                                       </tr>
+                                    @endif
+                                    </tbody>
+                                    <tfoot>
+                                    {{$treasureHunts->appends(request()->all())->links()}}
+                                    </tfoot>
+                                </table>
                             </div>
-                        @endif
+                        </div>
                     </article>
                 </div>
             </section>

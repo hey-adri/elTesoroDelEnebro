@@ -6,6 +6,7 @@ use App\Models\TreasureHunt;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -31,7 +32,7 @@ class Clue extends Model
      */
     public function scopeFilter($query, array $filters, $sortBy = 'updated_at', $sortDirection = 'desc')
     {
-        return $query->when($filters['has_image'] ?? false, function ($query, $hasImage) {
+        $query->when($filters['has_image'] ?? false, function ($query, $hasImage) {
             return $query->whereHas('image');
         })
             ->when($filters['has_embedded_video'] ?? false, function ($query, $hasEmbeddedVideo) {
@@ -46,7 +47,7 @@ class Clue extends Model
                     $query->where('username', $username);
                 });
             })
-            ->when($filters['search'] ?? false, function ($query, $search) {
+            ->when($filters['search_internal'] ?? false, function ($query, $search) {
                 return $query->where(function ($query) use ($search) {
                     $query->where('title', 'like', '%' . $search . '%')
                         ->orWhere('body', 'like', '%' . $search . '%')
@@ -54,7 +55,24 @@ class Clue extends Model
                         ->orWhere('clueKey', 'like', '%' . $search . '%')
                         ->orWhere('footNote', 'like', '%' . $search . '%');
                 });
-            })->orderBy($sortBy, $sortDirection);
+            })
+            ->when($filters['search'] ?? false, function ($query, $search) {
+                return $query->where(function ($query) use ($search) {
+                    $query->where('title', 'like', '%' . $search . '%')
+                        ->orWhere('clueKey', 'like', '%' . $search . '%')
+                        ->orWhere('unlockKey', 'like', '%' . $search . '%')
+                        ->orWhereHas('treasure_hunt', function ($query) use ($search) {
+                            $query->where('title', 'like', '%' . $search . '%');
+                        })
+                        ->orWhereHas('treasure_hunt.owner', function ($query) use ($search) {
+                            $query->where('username', 'like', '%' . $search . '%');
+                        });
+                });
+            });
+        //Custom sorting
+        $query->orderBy($sortBy, $sortDirection);
+        return $query;
+
     }
 
     //Upon clue creation, we'll generate an unique clueKey, making sure it doesn't exist already
@@ -63,7 +81,12 @@ class Clue extends Model
         parent::boot();
         self::creating(function (Clue $clue){
             $clue->clueKey = self::generateRandomClueKey();
-            $clue->order = $clue->treasure_hunt->clues()->count()+1;
+            //Making sure the order stays consistent
+            if(!$clue->order) $clue->order = $clue->treasure_hunt->clues()->count()+1;
+            else{
+                //There's a order on creation, not from seeder, reorder clues
+                self::orderChanged($clue,null,$clue->order);
+            }
         });
     }
 
@@ -84,6 +107,8 @@ class Clue extends Model
             }catch (\Exception $exception){
                 Log::log('error',$exception->getMessage());
             }
+            //Reordering clues
+            self::orderChanged($clue,$clue->order,null);
         });
     }
 
@@ -140,6 +165,35 @@ class Clue extends Model
     }
 
     /**
+     * Reorders the clues so that they stay consistently ordered, to be called on delete, create and update
+     * @param int|null $oldValue null on create
+     * @param int|null $newValue null on delete
+     * @return void
+     * @throws \Exception
+     */
+    public static function orderChanged(Clue $clue, int|null $oldValue, int|null $newValue){
+        if ($oldValue!=$newValue){
+            if($oldValue){
+                //If there's an old value, we'll decrement all subsequent clues to fill the spot
+                //Querying all affected clues, straight from the database, to perform a mass update
+                $query = DB::table('clues')
+                    ->where('treasure_hunt_id', $clue->treasure_hunt_id)
+                    ->where('order', '>', $oldValue)
+                    ->where('id', '!=', $clue->id) //Excluding this clue to prevent changes
+                    ->decrement('order');
+            }
+            if($newValue){
+                //If there's a nes value, we'll shift all the clues to make room for this one
+                $query = DB::table('clues')
+                    ->where('treasure_hunt_id', $clue->treasure_hunt_id)
+                    ->where('order', '>=', $newValue)
+                    ->where('id', '!=', $clue->id) //Excluding this clue to prevent changes
+                    ->increment('order');
+            }
+        }
+    }
+
+    /**
      * Mutators and Accessors
      */
 
@@ -158,4 +212,5 @@ class Clue extends Model
             set: fn (string $value) => strtoupper($value),
         );
     }
+
 }

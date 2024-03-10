@@ -14,13 +14,13 @@
             <div class="w-100 text-center d-flex flex-column flex-md-row justify-content-evenly gap-3">
                 <div class="flex-grow-1 d-flex align-items-center justify-content-center">
                     <span class="handwritten">{{__('Pistas Totales:')}}</span>
-                    <span class="ms-2"><i class="fa-solid fa-note-sticky"></i>{{$treasureHunt->clues->count()}}</span>
+                    <span class="ms-2"><i class="fa-solid fa-scroll"></i>{{$treasureHunt->clues->count()}}</span>
                 </div>
                 <hr class="d-md-none">
                 <div class="vr d-none d-md-block"></div>
                 <div class="flex-grow-1 d-flex align-items-center justify-content-center">
                     <span class="handwritten">{{__('Pistas Pro:')}}</span>
-                    <span class="{{$treasureHunt->isPro()?'badge-secondary':'badge'}} ms-2"><i class="fa-solid fa-note-sticky"></i>{{count($treasureHunt->proClues())}} {{__('PRO')}}</span>
+                    <span class="{{$treasureHunt->isPro()?'badge-secondary':'badge'}} ms-2"><i class="fa-solid fa-scroll"></i>{{count($treasureHunt->proClues())}} {{__('PRO')}}</span>
                 </div>
                 <hr class="d-md-none">
                 <div class="vr d-none d-md-block"></div>
@@ -29,7 +29,7 @@
                         <a class="btn btn-primary w-100" href="{{route('clue.create',['treasureHunt'=>$treasureHunt->id])}}"
                            data-bs-toggle="tooltip" data-bs-placement="top"
                            data-bs-title="{{__('Crea y añade pistas tu Búsqueda')}}"
-                        ><i class="fa-solid fa-plus me-0"></i><i class="fa-solid fa-note-sticky"></i> {{__('Añadir Pista')}}</a>
+                        ><i class="fa-solid fa-plus me-0"></i><i class="fa-solid fa-scroll"></i> {{__('Añadir Pista')}}</a>
                     </div>
                     <div class="col">
                         <a class="btn btn-success w-100" href="{{route('treasureHunt.edit',['treasureHunt'=>$treasureHunt->id])}}"
@@ -37,11 +37,16 @@
                            data-bs-title="{{__('Edita el título de tu Búsqueda')}}"
                         ><i class="fa-solid fa-pen-nib"></i> {{__('Editar')}}</a>
                     </div>
-                    <div class="col">
-                        <a class="btn btn-secondary w-100" href="{{route('treasureHunt.generateQRCodes',['treasureHunt'=>$treasureHunt->id])}}"
-                           data-bs-toggle="tooltip" data-bs-placement="top"
-                           data-bs-title="{{__('¡Genera QRs para imprimirlos y comenzar la aventura!')}}"
-                        ><i class="fa-solid fa-qrcode"></i> {{__('Generar QRs')}}</a>
+                    <div class="col"
+                         data-bs-toggle="tooltip" data-bs-placement="top"
+                         @if($treasureHunt->clues()->count()>0)
+                             data-bs-title="{{__('¡Genera QRs para imprimirlos y comenzar la aventura!')}}"
+                         @else
+                             data-bs-title="{{__('Para Generar QRs es necesario que hayas creado alguna Pista')}}"
+                        @endif>
+                        <a class="btn btn-secondary w-100 {{!$treasureHunt->clues()->count()>0?'disabled':''}}" href="{{route('treasureHunt.generateQRCodes',['treasureHunt'=>$treasureHunt->id])}}">
+                            <i class="fa-solid fa-qrcode"></i> {{__('Generar QRs')}}
+                        </a>
                     </div>
                     <div class="col">
                         <form method="POST" action="{{route('treasureHunt.destroy',['treasureHunt'=>$treasureHunt->id])}}" class="deleteTreasureHuntForm d-inline-block w-100">

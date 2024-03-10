@@ -20,6 +20,43 @@
             <div class="input-group">
                 <div class="form-floating"
                      data-bs-toggle="tooltip" data-bs-placement="right"
+                     data-bs-title="{{__('Esta posición es la que ocupará tu pista en la Búsqueda del Tesoro')}}"
+                >
+                    <select class="form-select form-control" name="order" >
+                        @if($method=='create')
+                            @for($i = 1; $i<=$treasureHunt->clues()->count();$i++){
+                            <option value="{{$i}}">
+                                {{__('Pista')}} {{$i}}
+                            </option>
+                            @endfor
+                            <option value="{{$treasureHunt->clues()->count()+1}}" {{(!old('order')?'selected':'')}}>
+                                {{__('Pista')}} {{$treasureHunt->clues()->count()+1}}
+                            </option>
+                        @else
+                            @for($i = 1; $i<=$clue->treasure_hunt->clues()->count();$i++){
+                            <option value="{{$i}}" {{(old('order',$clue->order)==$i?'selected':'')}}>
+                                {{__('Pista')}} {{$i}}
+                            </option>
+                            @endfor
+                        @endif
+
+                    </select>
+                    <label for="title" class="form-label">
+                        <i class="fa-solid fa-heading"></i>
+                        {{__('Posición')}}
+                    </label>
+                </div>
+                <span class="input-group-text"
+                      data-bs-toggle="tooltip" data-bs-placement="top"
+                      data-bs-title="{{__('Por defecto, las pistas se añaden como las últimas')}}"
+                ><i class="fa-solid fa-question"></i></span>
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <div class="input-group">
+                <div class="form-floating"
+                     data-bs-toggle="tooltip" data-bs-placement="right"
                      data-bs-title="{{__('P.ej: El Canto del Arroyo')}}"
                 >
                     <input type="text" class="form-control" name="title" id="title" placeholder=" " value="{{old('title',$clue?->title)}}">
@@ -461,6 +498,10 @@
                     $(element).addClass("is-valid").removeClass("is-invalid");
                 },
                 rules: {
+                    order:{
+                        required:true,
+                        digits:true
+                    },
                     title:{
                         required:true,
                         maxlength:255,

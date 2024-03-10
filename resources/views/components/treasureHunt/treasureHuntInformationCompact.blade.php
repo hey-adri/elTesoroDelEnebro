@@ -7,7 +7,7 @@
     @endif
     <h3 class="fs-3 mt-3"><span class="text-muted">{{__('Título: ')}}</span>{{$treasureHunt->title}}</h3>
     <ul class="list-unstyled d-flex flex-column fs-6 gap-1 mb-0">
-        <li class="small text-muted"><i class="fa-solid fa-note-sticky"></i>{{__('Pistas:')}} {{$treasureHunt->clues->count()}}</li>
+        <li class="small text-muted"><i class="fa-solid fa-scroll"></i>{{__('Pistas:')}} {{$treasureHunt->clues->count()}}</li>
         <li class="small text-muted"><i class="fa-solid fa-clock-rotate-left"></i>{{__('Actualizada ')}} {{$treasureHunt->getLastUpdate()->diffForHumans()}}</li>
         <hr>
         <li class="d-flex flex-column flex-lg-row gap-2 justify-content-evenly mt-2">

@@ -6,7 +6,7 @@
             <div class="col-12 max-width-md">
                 <article class="paperCard">
                     <div>
-                        <i class="fa-solid fa-plus me-0"></i><i class="fa-solid fa-note-sticky"></i>
+                        <i class="fa-solid fa-plus me-0"></i><i class="fa-solid fa-scroll"></i>
                         <h1 class="d-inline-block">{{__('Editando Pista')}} {{$clue->title}}<span class="text-body fs-4"> {{__('en')}} {{$clue->treasure_hunt->title}}</span></h1>
                     </div>
                     <x-clue.clueForm :clue="$clue" :method="'update'"/>

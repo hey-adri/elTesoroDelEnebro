@@ -4,9 +4,9 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Clue\Clue;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Collection;
@@ -33,24 +33,38 @@ class User extends Authenticatable
      * @param array $filters
      * @return mixed
      */
-    public function scopeFilter($query, array $filters, $sortBy = 'updated_at', $sortDirection = 'desc')
+    public function scopeFilter(Builder $query, array $filters, $sortBy = 'updated_at', $sortDirection = 'desc')
     {
-        return $query->when($filters['pro'] ?? false, function (Builder $query) {
-            return $query->whereHas('treasure_hunts.clues', function (Builder $query) {
+        return $query->when($filters['pro'] ?? false, function ( $query) {
+            return $query->whereHas('treasure_hunts.clues', function ( $query) {
                 $query->whereHas('image')->orWhereHas('embedded_video');
             });
         })
-            ->when($filters['isAdmin'] ?? false, function (Builder $query) {
+            ->when($filters['has_images'] ?? false, function ($query) {
+                return $query->whereHas('treasure_hunts.clues', function ($query) {
+                    $query->whereHas('image');
+                });
+            })
+            ->when($filters['has_embedded_videos'] ?? false, function ($query) {
+                return $query->whereHas('treasure_hunts.clues', function ($query) {
+                    $query->whereHas('embedded_video');
+                });
+            })
+            ->when($filters['isAdmin'] ?? false, function ( $query) {
                 return $query->where('isAdmin', true);
             })
-            ->when($filters['search'] ?? false, function (Builder $query, $search) {
-                return $query->where(function (Builder $query) use ($search) {
+            ->when($filters['search'] ?? false, function ( $query, $search) {
+                return $query->where(function ( $query) use ($search) {
                     $query->where('username', 'like', '%' . $search . '%')
                         ->orWhere('name', 'like', '%' . $search . '%')
                         ->orWhere('email', 'like', '%' . $search . '%');
                 });
             })
-            ->orderBy($sortBy, $sortDirection);
+            ->when($sortBy === 'treasure_hunt_count', function ($query) use ($sortDirection) {
+                return $query->withCount('treasure_hunts')->orderBy('treasure_hunts_count', $sortDirection);
+            }, function ($query) use ($sortBy, $sortDirection) {
+                return $query->orderBy($sortBy, $sortDirection);
+            });
     }
 
 
@@ -121,6 +135,21 @@ class User extends Authenticatable
     }
 
     /**
+     * Returns the number of one user's pro clues
+     * @return mixed
+     */
+    public function countProClues()
+    {
+        $user = $this;
+        return Clue::whereHas('treasure_hunt', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->where(function ($query) {
+            $query->whereHas('image')
+                ->orWhereHas('embedded_video');
+        })->count();
+    }
+
+    /**
      * Returns the number of one user's clues with images
      * @return mixed
      */
@@ -156,6 +185,7 @@ class User extends Authenticatable
             $query->whereHas('image')
                 ->orWhereHas('embedded_video');
         })->get();
+
     }
 
     /**
@@ -163,7 +193,7 @@ class User extends Authenticatable
      * @return int|mixed
      */
     public function proCluesLeft(){
-        $left = $this->max_pro_clues-count($this->proClues());
+        $left = $this->max_pro_clues-$this->countProClues();
         return ($left>0? $left: 0);
     }
 

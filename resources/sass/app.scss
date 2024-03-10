@@ -32,7 +32,6 @@ $focus-ring-color: white;
 $input-border-width: 0px;
 $input-border-radius: 0.7rem;
 $input-padding-y: .5rem;
-
 //Tooltips
 $tooltip-bg: $darkerPrimary;
 $tooltip-color: $textOnPrimary;
@@ -42,10 +41,12 @@ $dropdown-link-hover-color: $textOnPrimary;
 //Buttons
 $btn-border-radius: 0.7rem;
 $btn-border-radius-lg: $btn-border-radius;
+//Tables
+$table-color:$primary;
 
 
 
-// Bootstrap
+    // Bootstrap
 @import 'bootstrap/scss/bootstrap';
 
 
@@ -104,7 +105,7 @@ header {
 }
 
 .paperCard {
-    @extend .paperLayer, .p-sm-4, .p-2, .py-3;
+    @extend .paperLayer, .p-sm-4, .p-3, .py-3;
 }
 
 .paperCardTitle {
@@ -149,7 +150,13 @@ form {
         }
 
     }
+
+    input[type="radio"]:checked + label {
+        @extend .text-primary;
+    }
 }
+
+//Estilos para tablas
 
 //Estilos para badges
 .badge{
@@ -266,4 +273,10 @@ form {
     50% { transform: translate(0, 0) rotate(0deg); }
     75% { transform: translate(-5px, 5px) rotate(-2deg); }
     100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+
+//Sweet Alert z-index
+.swal2-container {
+    z-index: 99999999999999;
 }

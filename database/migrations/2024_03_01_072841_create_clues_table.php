@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('unlockHint')->nullable();
             $table->integer('order')->default(0);
             $table->foreignId('treasure_hunt_id')->constrained('treasure_hunts','id')->cascadeOnDelete();
-            $table->text('help')->nullable(); //Todo
+            $table->text('help')->nullable();
             $table->timestamps();
         });
     }

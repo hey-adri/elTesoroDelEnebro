@@ -25,9 +25,6 @@ class ClueImageController extends Controller
         }
     }
 
-    public static function update(){
-        //Todo update,  Deletion of the old files, in case of update,will occur on update for $attributes['src'] is not empty
-    }
 
     /**
      * Validates and returns attributes array for update or create, handling the storing of the new files

@@ -1,6 +1,6 @@
 @props(['clue'])
 <div class="clueInformationCompact paperCard h-100">
-    <span class="{{$clue->isPro()?'badge-secondary':'badge'}}"><i class="fa-solid fa-note-sticky"></i> {{__('Pista').($clue->isPro()?' '.__('PRO'):'')}}</span>
+    <span class="{{$clue->isPro()?'badge-secondary':'badge'}}"><i class="fa-solid fa-scroll"></i> {{__('Pista').($clue->isPro()?' '.__('PRO'):'')}}</span>
     <h3 class="fs-3 mt-2 mb-2">
         <span class="fs-1">{{$clue->order}}.</span>
         {{$clue->title}}

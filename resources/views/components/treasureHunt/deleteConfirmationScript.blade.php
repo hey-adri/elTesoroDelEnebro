@@ -7,7 +7,7 @@
         event.preventDefault()
         const form = $(event.target).closest('form');
         showDeleteDialog(
-            `{{__('Vas a eliminar')}} "${$(event.target).attr(`data-treasureHuntTitle`)}". {{__('¡Se eliminarán todas las pistas asociadas!')}}`,
+            `{{__('Vas a eliminar')}} "${$(event.target).closest('button').attr(`data-treasureHuntTitle`)}". {{__('¡Se eliminarán todas las pistas asociadas!')}}`,
             `{{__('¿Estás Seguro?')}}`,
             `{{__('Sí, eliminar')}}`,
             `{{__('No, cancelar')}}`,

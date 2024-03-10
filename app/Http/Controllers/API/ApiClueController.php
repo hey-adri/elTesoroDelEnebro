@@ -29,7 +29,8 @@ class ApiClueController extends Controller
                     'title'=>$clue->treasure_hunt->title
                 ];
                 $response['data']['owner']=[
-                    'name'=>$clue->treasure_hunt->owner->name
+                    'name'=>$clue->treasure_hunt->owner->name,
+                    'profile_image'=>asset('storage/'.$clue->treasure_hunt->owner->profile_image)
                 ];
                 $response['data']['clue']=$clue;
                 //Removing sensitive data
@@ -49,7 +50,11 @@ class ApiClueController extends Controller
                     $response['data']['unlock_hint']=$clue->unlockHint;
                 }
                 $response['data']['clue']=[
-                    'title'=>$clue->title
+                    'title'=>$clue->title,
+                    'order'=>$clue->order
+                ];
+                $response['data']['treasure_hunt']=[
+                    'title'=>$clue->treasure_hunt->title
                 ];
             }
 

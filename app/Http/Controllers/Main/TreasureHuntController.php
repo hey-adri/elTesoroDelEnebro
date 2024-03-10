@@ -7,6 +7,7 @@ use App\Http\Controllers\Helpers\HelperController;
 use App\Models\TreasureHunt;
 use Exception;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use function Laravel\Prompts\search;
@@ -18,51 +19,30 @@ class TreasureHuntController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
     public function index(){
+        $filters=[];
+        //Getting filters and sorting from request
+        if($reqFilters = request('filters')){
+            if (in_array('pro',$reqFilters)) $filters['pro']=true;
+        }
+        if(request('search'))$filters['search_internal']=request('search');
+        $sortBy=request('sortBy','updated_at');
+        $sortDirection = request('sortDirection','desc');
+
+        //Getting all treasureHunts filtered
         $user = auth()->user();
-        /**
-         * Querying all the users treasure_hunts
-         */
-        $treasureHunts = $user->treasure_hunts()->with('clues');
-
-        /**
-         * Searching by treasure_hunts.title or clues.title
-         */
-        $search = request('search');
-        if ($search) {
-            $treasureHunts->where(function ($treasureHunts) use ($search) { //Filtering by the treasureHunts that belong to the user and ...
-                $treasureHunts->where('title', 'like', '%' . $search . '%') //  have the search on their title
-                    ->orWhereHas('clues', function ($clues) use ($search) {// Or those which have clues that...
-                        $clues->where(function ($query) use ($search) {
-                            $query->where('title', 'like', '%' . $search . '%') // Have the search on their title
-                                ->orWhere('body', 'like', '%' . $search . '%'); /// Have the search on their body
-                        });
-                    });
-            });
-        }
-        /**
-         * Filtering by pro Clues
-         */
-        if(in_array('ProOnly',(request('filters')?request('filters'):[]))){
-            $treasureHunts->whereHas('clues', function ($clue) { //Filtering by the treasureHunts that have clues
-                $clue->whereHas('image')->orWhereHas('embedded_video'); //That either have an image or video, pro clues
-            });
-        }
-
-        /**
-         * Sorting by most recent, having in account treasureHunts and their clues, whichever is latest
-         */
-        $treasureHunts->orderByDesc(function ($query) {
-            $query->selectRaw('GREATEST(treasure_hunts.updated_at, COALESCE((SELECT MAX(updated_at) FROM clues WHERE treasure_hunt_id = treasure_hunts.id), \'1970-01-01 00:00:00\'))'); //Using coalesce to provide default date in case there are no clues
-        });
+        $query = $user->treasure_hunts()->filter($filters,$sortBy,$sortDirection);
 
 
-        /**
-         * Paginating
-         */
-        $treasureHunts = $treasureHunts->paginate(6);
+        //Pagination
+        $treasureHunts = $query->paginate(6)->fragment('searchBar');
 
         return view('treasureHunts.index',[
-            'treasure_hunts'=>$treasureHunts
+            'treasure_hunts'=>$treasureHunts,
+            'backTo'=>[
+                'route'=>route('home'),
+                'icon'=>'fa-house',
+                'name'=>__('Home')
+            ],
         ]);
     }
 
@@ -72,36 +52,21 @@ class TreasureHuntController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
     public function show(TreasureHunt $treasureHunt){
-        $clues = $treasureHunt->clues();
-        /**
-         * Searching by treasure_hunts.title or clues.title
-         */
-        $search = request('search');
-        if ($search) {
-            $clues->where(function ($clues) use ($search) {
-                $clues->where('title', 'like', '%' . $search . '%')
-                    ->orWhere('body', 'like', '%' . $search . '%')
-                    ->orWhere('help', 'like', '%' . $search . '%')
-                    ->orWhere('footNote', 'like', '%' . $search . '%')
-                    ->orWhere('clueKey', 'like', '%' . $search . '%');
-            });
+        $filters=[];
+        //Getting filters and sorting from request
+        if($reqFilters = request('filters')){
+            if (in_array('pro',$reqFilters)) $filters['pro']=true;
+            if (in_array('has_embedded_video',$reqFilters)) $filters['has_embedded_video']=true;
+            if (in_array('has_image',$reqFilters)) $filters['has_image']=true;
         }
-        /**
-         * Filtering by pro Clues
-         */
-        if(in_array('ProOnly',(request('filters')?request('filters'):[]))){
-            $clues->where(function ($clues) {
-                $clues->whereHas('image')->orWhereHas('embedded_video');
-            });
-        }
-        /**
-         * Sort the clues by id in ascending order
-         */
-        $clues->orderBy('order', 'asc');
-        /**
-         * Paginating
-         */
-        $clues = $clues->paginate(10);
+        if(request('search'))$filters['search_internal']=request('search');
+        $sortBy=request('sortBy','updated_at');
+        $sortDirection = request('sortDirection','desc');
+
+        //Getting all clues filtered
+        $clues = $treasureHunt->clues()->filter($filters,$sortBy,$sortDirection);
+
+        $clues = $clues->paginate(10)->fragment('searchBar');
         return view('treasureHunts.show',[
             'treasureHunt'=>$treasureHunt,
             'clues'=>$clues,
@@ -167,11 +132,12 @@ class TreasureHuntController extends Controller
         return view('treasureHunts.edit',[
             'treasureHunt'=>$treasureHunt,
             'backTo'=>[
-            'route'=>route('treasureHunt.show',['treasureHunt'=>$treasureHunt]),
-            'icon'=>'fa-book',
-            'name'=>$treasureHunt->title
-        ],
-        ]);
+                'route'=>route('admin.treasureHunts.index'),
+                'icon'=>'fa-book',
+                'name'=>__('Admin. Búsquedas del Tesoro')
+            ],
+        ]
+        );
     }
 
     /**

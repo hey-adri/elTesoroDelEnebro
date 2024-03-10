@@ -105,11 +105,17 @@
                         rules: {
                             username: {
                                 required: true,
-                                maxlength:255
+                                maxlength:255,
+                                regex:/^((?!@).)*$/
                             },
                             password: {
                                 required: true,
                                 maxlength:255
+                            }
+                        },
+                        messages:{
+                            username:{
+                                regex:`{{__('Debes iniciar sesión con tu nombre de usuario, no tu email.')}}`
                             }
                         },
                         submitHandler: (form) => {

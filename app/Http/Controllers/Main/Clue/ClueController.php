@@ -76,7 +76,7 @@ class ClueController extends Controller
             //Redirecting to the parent treasureHunt
             return redirect(route('treasureHunt.show',['treasureHunt'=>$treasureHunt->id]))->with('toast',[
                 'icon' => 'success',
-                'text'=>__('Pista con clave ').$clue->clueKey.__(' creada!')
+                'text'=>$clue->title.__(' creada!')
             ]);
         } catch (\Exception $exception) {
             Log::log('error',$exception->getMessage());
@@ -125,7 +125,10 @@ class ClueController extends Controller
         HelperController::sanitizeArray($clueEmbeddedVideoAttributes);
         try {
             //Updating the clue
+            $oldClueOrder = $clue->order;
             $clue->updateOrFail($clueAttributes);
+            //Reordering the clues in the treasureHunt to make Room for the updated one
+            Clue::orderChanged($clue,$oldClueOrder,$clue->order);
             //Updating, creating or deleting clue's extras depending on request
             //clueEmbeddedVideo
             ClueEmbeddedVideoController::createUpdateOrDeleteOnRequest($clueEmbeddedVideoAttributes, $clue);
@@ -184,7 +187,8 @@ class ClueController extends Controller
                     "title"=>["required"],
                     "body"=>["required"],
                     "footNote"=>["max:255"],
-                    "help"=>[],
+                    "help"=>['nullable','string'],
+                    'order'=>['required','integer'],
                     "unlockKey"=>["max:255"],
                     "unlockHint"=>["max:255"],
                 ]

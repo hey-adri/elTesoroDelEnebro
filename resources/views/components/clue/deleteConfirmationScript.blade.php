@@ -7,7 +7,7 @@
         event.preventDefault()
         const form = $(event.target).closest('form');
         showDeleteDialog(
-            `{{__('Vas a eliminar la pista con código')}} "${$(event.target).attr(`data-clueKey`)}".`,
+            `{{__('Vas a eliminar la pista con código')}} "${$(event.target).closest('button').attr(`data-clueKey`)}".`,
             `{{__('¿Estás Seguro?')}}`,
             `{{__('Sí, eliminar')}}`,
             `{{__('No, cancelar')}}`,

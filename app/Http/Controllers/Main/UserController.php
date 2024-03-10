@@ -21,7 +21,12 @@ class UserController extends Controller
      */
     public function edit(User $user){
         return view('users.edit',[
-            'user'=>$user
+            'user'=>$user,
+            'backTo'=>[
+                'route'=>route('userArea.index'),
+                'icon'=>'fa-user',
+                'name'=>__('Área Personal')
+            ],
         ]);
     }
 
@@ -37,6 +42,8 @@ class UserController extends Controller
                 "name"=>["required","max:255"],
                 "email"=>["required","email","max:255",Rule::unique('users','email')->ignore($user->id,'id')], //Ignoring this user's fields in unique
                 "username"=>["required","regex:/^(?=.{4,20}$)[a-z0-9._-]+$/",Rule::unique('users','username')->ignore($user->id,'id')], //Ignoring this user's fields in unique
+                'isAdmin'=>['nullable','boolean'],
+                'max_pro_clues'=>['nullable','integer']
             ]
         );
 
@@ -69,7 +76,7 @@ class UserController extends Controller
             //Updating the user
             $user->updateOrFail($attributes);
             //Redirecting back
-            return redirect()->back()->with('toast',[
+            return redirect()->route('userArea.index')->with('toast',[
                 'icon' => 'success',
                 'text'=>__('Actualización correcta.')
             ]);
@@ -86,10 +93,6 @@ class UserController extends Controller
         try {
             $this->deleteProfileImageFromStorage($user);
             $user->deleteOrFail();
-            session()->flash('toast', [
-                'icon' => 'success',
-                'text' => __('Cuenta Eliminada, Hasta Pronto')
-            ]);
             auth()->logout();
             return redirect()->route('home')->with('toast', [
                 'icon' => 'success',
@@ -108,7 +111,7 @@ class UserController extends Controller
      * @param User $user
      * @return void
      */
-    private function setDefaultProfileImage(User $user){
+    protected function setDefaultProfileImage(User $user){
         $user->profile_image = User::getRandomProfileImagePath();
     }
 
@@ -117,7 +120,7 @@ class UserController extends Controller
      * @param User $user
      * @return void
      */
-    private function deleteProfileImageFromStorage(User $user){
+    protected function deleteProfileImageFromStorage(User $user){
         if(!User::isImagePathDefault($user->profile_image)){
             if(Storage::exists($user->profile_image)){
                 Storage::delete($user->profile_image);

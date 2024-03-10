@@ -38,13 +38,13 @@
                         <div class="vr d-none d-lg-block"></div>
                         <div class="flex-grow-1 d-flex flex-column flex-xl-row align-items-center justify-content-center">
                             <span class="handwritten">{{__('Tus Pistas')}}</span>
-                            <span class="ms-2"><i class="fa-solid fa-note-sticky"></i>{{$user->clues()->count()}}</span>
+                            <span class="ms-2"><i class="fa-solid fa-scroll"></i>{{$user->clues()->count()}}</span>
                         </div>
                         <hr class="d-lg-none">
                         <div class="vr d-none d-lg-block"></div>
                         <div class="flex-grow-1 d-flex  flex-column align-items-center justify-content-center position-relative">
                             <span class="handwritten">{{__('Pistas Pro Utilizadas')}}</span>
-                            <span class="{{(count($user->proClues())>0)?'badge-secondary':'badge'}} ms-2"><i class="fa-solid fa-note-sticky"></i>{{count($user->proClues())}} {{__('PRO')}} / {{$user->max_pro_clues}} {{__('MAX')}}</span>
+                            <span class="{{($user->countProClues()>0)?'badge-secondary':'badge'}} ms-2"><i class="fa-solid fa-scroll"></i>{{$user->countProClues()}} {{__('PRO')}} / {{$user->max_pro_clues}} {{__('MAX')}}</span>
 
                             <div class="badge mt-2"
                                  data-bs-toggle="tooltip" data-bs-placement="top"

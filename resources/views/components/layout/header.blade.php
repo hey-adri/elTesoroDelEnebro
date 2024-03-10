@@ -35,20 +35,53 @@
                             </a>
                         </li>
                         <li class="nav-item text-primary dropdown">
-                            <button class="nav-link  dropdown-toggle {{request()->routeIs(['sessions.*','userArea.*'])?'active':''}}"
+                            <button class="nav-link  dropdown-toggle {{request()->routeIs(['login','register.*','userArea.*','treasureHunt.*','clue.*','user.*'])?'active':''}}"
                                     role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-solid fa-user m-1"></i>
-                                {{__('Cuenta')}}
+                                @auth()
+                                    {{(auth()->user()->username)}}
+                                @else
+                                    {{__('Cuenta')}}
+                                @endauth
+
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 @auth()
-                                    <span class="dropdown-item text-center disabled text-primary">{{__('Sesión Iniciada como')}} {{auth()->user()->username}}</span>
-                                    <li>
-                                        <hr class="dropdown-divider">
+                                    <li><a class="dropdown-item {{request()->routeIs(['userArea.*',])?'fw-bold':''}}"
+                                           href="{{route('userArea.index')}}">
+                                            <i class="fa-solid fa-user"></i>
+                                            {{__('Área Personal')}}
+                                        </a>
                                     </li>
-                                    <li><a class="dropdown-item {{request()->routeIs(['userArea.*'])?'fw-bold':''}}"
-                                           href="{{route('userArea.index')}}">Área Personal</a></li>
+
+                                    @if(auth()->user()->isAdmin)
+                                    {{--  Admin Section --}}
+                                        <hr>
+                                        <li>
+                                            <a class="dropdown-item {{request()->routeIs(['admin.users.*',])?'fw-bold':''}}"
+                                               href="{{route('admin.users.index')}}">
+                                                <i class="fa-solid fa-users-gear"></i>
+                                                {{__('Admin. Usuarios')}}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item {{request()->routeIs(['admin.treasureHunts.*',])?'fw-bold':''}}"
+                                               href="{{route('admin.treasureHunts.index')}}">
+                                                <i class="fa-solid fa-book"></i>
+                                                {{__('Admin. Búsquedas Del Tesoro')}}
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item {{request()->routeIs(['admin.clues.*',])?'fw-bold':''}}"
+                                               href="{{route('admin.clues.index')}}">
+                                                <i class="fa-solid fa-scroll"></i>
+                                                {{__('Admin. Pistas')}}
+                                            </a>
+                                        </li>
+
+                                        <hr>
+                                    @endif
                                     <li class="dropdown-item text-center bg-body">
                                         <a href="{{route('logout')}}" class="btn btn-danger">
                                             <i class="fa-solid fa-right-from-bracket m-1"></i>
