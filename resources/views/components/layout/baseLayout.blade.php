@@ -38,7 +38,37 @@
 <script src="{{asset('/assets/js/modules/bootstrap/bootstrap.bundle.min.js')}}"></script>
 <script src="{{asset('/assets/js/modules/sweetalert2/sweetalert2.min.js')}}"></script>
 <script src="{{asset('/assets/js/modules/fontAwesome/fontAwesome.min.js')}}"></script>
+<script src="{{asset('/assets/js/modules/jqueryValidation/jquery.validate.min.js')}}"></script>
+@if(app()->getLocale()!='en')
+    {{-- Adding the validation messages localized --}}
+    <script src="{{asset('/assets/js/modules/jqueryValidation/localization/messages_'.app()->getLocale().'.js')}}"></script>
+@endif
 <script src="{{asset('/assets/js/commonFunctions.js')}}"></script>
+
+
+@if(session('popup'))
+    <script>
+        $(()=>{
+            showPopup(
+                '{{session('popup')['text']}}',
+                '{{session('popup')['title']}}',
+                '{{session('popup')['icon']}}'
+            )
+        })
+    </script>
+@endif
+
+@if(session('toast'))
+    <script>
+        $(()=>{
+            showToast(
+                '{{session('toast')['text']}}',
+                '{{session('toast')['icon']}}'
+            )
+        })
+    </script>
+@endif
+
 
 {{$scripts}}
 

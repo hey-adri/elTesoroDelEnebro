@@ -13,7 +13,13 @@ class HomeController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
      */
     public function index(){
-        return view('home.home');
+        return view('home.home',[
+            'backTo'=>[
+                'route'=>route('userArea.index'),
+                'icon'=>'fa-user',
+                'name'=>__('Área Personal')
+            ],
+        ]);
     }
 
     /**
@@ -23,7 +29,12 @@ class HomeController extends Controller
      */
     public function show($clueKey){
         return view('home.home',[
-            'clueKey'=>$clueKey
+            'clueKey'=>$clueKey,
+            'backTo'=>[
+                'route'=>route('userArea.index'),
+                'icon'=>'fa-user',
+                'name'=>__('Área Personal')
+            ],
         ]);
     }
 }

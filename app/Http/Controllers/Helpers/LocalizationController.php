@@ -15,6 +15,6 @@ class LocalizationController extends Controller
     public function update ($locale) {
         app()->setLocale($locale);
         session()->put('locale', $locale);
-        return redirect(route('home'));
+        return redirect()->back();
     }
 }

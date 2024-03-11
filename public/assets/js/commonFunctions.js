@@ -6,6 +6,7 @@ $(() => {
     //Enabling Tooltips
     refreshBSTooltips()
     enableTopOfThePageLink()
+    setUpCustomValidators()
 })
 
 //! Messaging Functions
@@ -34,9 +35,9 @@ const showToast = (text, icon = 'success', timer = 5000) => {
 
 /**
  * Displays a popup until the user clicks the close button
- * @param {*} text 
- * @param {*} title 
- * @param {*} icon 
+ * @param {*} text
+ * @param {*} title
+ * @param {*} icon
  */
 const showPopup = (text, title = null, icon = 'info', thenFunction = null, confirmButtonText = 'OK') => {
     Swal.fire({
@@ -45,9 +46,81 @@ const showPopup = (text, title = null, icon = 'info', thenFunction = null, confi
         icon,
         confirmButtonText
     }).then(() => {
-        thenFunction?.apply()
-    }
+            thenFunction?.apply()
+        }
     )
+}
+
+/**
+ * Displays a popup until the user clicks the close button
+ * @param {*} text
+ * @param {*} title
+ * @param {*} icon
+ */
+const showLoading = (text, title) => {
+    Swal.fire({
+        showConfirmButton:false,
+        // title,
+        // text,
+        html:`
+        <div>
+            <h1 class="display-3">${title}</h1>
+            <div class="my-3">
+                <div class='loaderContainer'><div class='loader'></div></div>
+            </div>
+            <p class="text-body">${text}</p>
+        </div>
+        `,
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+    })
+}
+
+/**
+ * Displays a popup until the user clicks the close button
+ * @param {*} text
+ * @param {*} title
+ * @param {*} icon
+ */
+const showDeleteDialog = (text, title = null , deleteButtonText, cancelButtonText, deleteFunction, cancelledFunction=null) => {
+    Swal.fire({
+        title,
+        text,
+        icon:'warning',
+        showConfirmButton: false,
+        showDenyButton: true,
+        denyButtonText:deleteButtonText,
+        showCancelButton: true,
+        cancelButtonText,
+        focusCancel: true
+    }).then((result) => {
+            if (result.isDenied) {
+                deleteFunction?.apply()
+            }else{
+                cancelledFunction?.apply()
+            }
+        }
+    )
+}
+
+const showAccountDeleteDialog = async (text, title, deleteButtonText, warning, acceptFunction ) => {
+    const { value: accept } = await Swal.fire({
+        title,
+        input: "checkbox",
+        inputValue: 0,
+        inputAutoFocus:false,
+        inputPlaceholder: text,
+        confirmButtonColor: `#B31312`,
+        confirmButtonText: `
+        ${deleteButtonText}&nbsp;<i class="fa fa-trash"></i>
+      `,
+        inputValidator: (result) => {
+            return !result && warning;
+        }
+    });
+    if (accept) {
+       acceptFunction.apply()
+    }
 }
 
 //! Animation Functions
@@ -96,24 +169,30 @@ const refreshBSTooltips = () => {
  * Enables all bootstrap tooltips
  */
 const disableBSTooltips = () => {
+    $('.tooltip').remove()
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    [...tooltipTriggerList].map(tooltipTriggerEl => {
+        const tooltip = new bootstrap.Tooltip(tooltipTriggerEl)
+        tooltip.disable();
+    });
 }
 
 //Shows or hide the scroll to top link
 const enableTopOfThePageLink = () => {
-    $(window).scroll(function () {
-        var scroll = $(window).scrollTop();
-        if (scroll >= 50) {
-            if ($('#topOfThePageButton').hasClass('d-none')) {
-                animateShow('#topOfThePageButton')
-            }
-        } else {
-            if (!$('#topOfThePageButton').hasClass('d-none')) {
-                animateHide('#topOfThePageButton')
-            }
+    $(window).scroll(pageScrolled);
+    pageScrolled()
+}
+const pageScrolled = ()=>{
+    var scroll = $(window).scrollTop();
+    if (scroll >= 80) {
+        if ($('#topOfThePageButton').hasClass('d-none')) {
+            animateShow('#topOfThePageButton')
         }
-    });
+    } else {
+        if (!$('#topOfThePageButton').hasClass('d-none')) {
+            animateHide('#topOfThePageButton')
+        }
+    }
 }
 
 //! Helper Functions
@@ -137,4 +216,110 @@ const isHtml = (string) => /<(br|basefont|hr|input|source|frame|param|area|meta|
  */
 const formatAsParagraphs = (raw) => {
     return `<p>${raw.replace(/(\n)+/gm, `</p><p>`)}</p>`
+}
+
+/**
+ * Sets up Custom validators for Jquery Validate
+ */
+const setUpCustomValidators = ()=>{
+    /**
+     * Email validation
+     */
+    $.validator.addMethod("emailV2", function (value, element) {
+        const re = new RegExp(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+        return this.optional(element) || re.test(element.value);
+    });
+    $.validator.addMethod("regex", function (value, element, regex) {
+        const re = new RegExp(regex)
+        return this.optional(element) || re.test(element.value);
+    });
+    /**
+     * Usernames must be between 4-30 chars, and contain only lowercase letters, numbers . - and _.
+     */
+    $.validator.addMethod("username", function (value, element) {
+        const re = new RegExp(/^(?=.{4,20}$)[a-z0-9._-]+$/)
+        return this.optional(element) || re.test(element.value);
+    });
+    /**
+     * Passwords can have letters a-zA-Z, spaces, including ñ and accented vowels, digits and any special characters, must be between 4-30 chars.
+     */
+    $.validator.addMethod("passwordCheck", function (value, element) {
+        const re = new RegExp(/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\d$&+,:;=?@#|'<>.^*()%! -]{8,30}$/)
+        return this.optional(element) || re.test(element.value);
+    });
+
+}
+
+/**
+ * Makes secondary inputs dependent on a primary.
+ * When the primary input has no value, the secondary ones will be disabled and wiped
+ * When the primary input has value, the secondary ones will be enabled
+ * @param primaryInputSelector
+ * @param secondaryInputsSelector
+ * @param clearOnPrimaryEmpty If inputs should be cleared after parent is empty
+ */
+const makeInputDependentOn = (primaryInputSelector,secondaryInputsSelector,clearOnPrimaryEmpty = true)=>{
+    let primaryInput = getInputFromSelector(primaryInputSelector)
+
+    primaryInput.on('input change',()=>{
+        checkDependentInputs(primaryInputSelector,secondaryInputsSelector, clearOnPrimaryEmpty)
+    })
+    checkDependentInputs(primaryInputSelector,secondaryInputsSelector, clearOnPrimaryEmpty)
+}
+
+/**
+ * Makes an instant check and:
+ * When the primary input has no value, the secondary ones will be disabled and wiped
+ * When the primary input has value, the secondary ones will be enabled
+ * @param primaryInputSelector
+ * @param secondaryInputsSelector
+ * @param clearOnPrimaryEmpty If inputs should be cleared after parent is empty
+ */
+const checkDependentInputs = (primaryInputSelector,secondaryInputsSelector, clearOnPrimaryEmpty = true)=>{
+    let primaryInput = getInputFromSelector(primaryInputSelector)
+    let secondaryInputs = getInputFromSelector(secondaryInputsSelector)
+    if(secondaryInputs.length===0)  secondaryInputs = $(secondaryInputsSelector)
+    if(primaryInput.val()!=='') {
+        secondaryInputs.prop('disabled',false)
+    }
+    else {
+        secondaryInputs.prop('disabled',true)
+        if(clearOnPrimaryEmpty)secondaryInputs.val('')
+    }
+}
+
+/**
+ * Returns all the child inputs or the parent itself from a selection
+ * @param inputSelector
+ * @returns {*|jQuery}
+ */
+const getInputFromSelector = (inputSelector)=>{
+    let input = $(inputSelector).find('input')
+    if(input.length===0)  input = $(inputSelector)
+    return input;
+}
+
+
+/**
+ * Checks that an input type file doesn't exceed the maximum size in KB
+ * @param inputSelector
+ * @param maxSizeInKB
+ * @returns {boolean}
+ */
+const checkInputFileSize=(inputSelector, maxSizeInKB)=>{
+    const input = document.querySelector(inputSelector);
+    if (!input) return false;
+    if(input.value=="") return true;
+    return input.files[0].size<= (maxSizeInKB*1000)
+}
+
+const selectForDeletion=(selector, apply=true)=>{
+    if (apply){
+        $(selector).addClass('selectedForDelete border border-5 border-danger')
+        scrollTo(selector)
+    }else{
+        $(selector).removeClass('selectedForDelete border border-5 border-danger')
+        scrollTo(selector)
+    }
+
 }

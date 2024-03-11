@@ -32,7 +32,6 @@ $focus-ring-color: white;
 $input-border-width: 0px;
 $input-border-radius: 0.7rem;
 $input-padding-y: .5rem;
-
 //Tooltips
 $tooltip-bg: $darkerPrimary;
 $tooltip-color: $textOnPrimary;
@@ -42,10 +41,12 @@ $dropdown-link-hover-color: $textOnPrimary;
 //Buttons
 $btn-border-radius: 0.7rem;
 $btn-border-radius-lg: $btn-border-radius;
+//Tables
+$table-color:$primary;
 
 
 
-// Bootstrap
+    // Bootstrap
 @import 'bootstrap/scss/bootstrap';
 
 
@@ -57,11 +58,14 @@ $swal2-close-button-color: $primary;
 $swal2-confirm-button-background-color: $primary;
 $swal2-title-color: $darkerPrimary;
 $swal2-confirm-button-background-color: $success;
-$swal2-cancel-button-background-color: $danger;
+$swal2-deny-button-background-color: $danger;
+$swal2-cancel-button-background-color: $body-color;
 $swal2-toast-box-shadow: none;
 $swal2-border: $border;
 $swal2-border-radius: 20px;
 $swal2-timer-progress-bar-background: rgba($primary,0.5);
+$swal2-validation-message-background: $danger-bg-subtle;
+$swal2-validation-message-icon-background: $danger;
 //! Swal import
 @import 'sweetalert2/src/sweetalert2.scss';
 
@@ -77,8 +81,9 @@ $swal2-timer-progress-bar-background: rgba($primary,0.5);
     font-family: $mainFontFamily
 }
 
-.fa-solid {
+.fa-solid, .svg-inline--fa {
     @extend .m-1;
+    vertical-align: middle;
 }
 
 .handwritten {
@@ -100,14 +105,17 @@ header {
 }
 
 .paperCard {
-    @extend .paperLayer, .p-4;
+    @extend .paperLayer, .p-sm-4, .p-3, .py-3;
 }
 
 .paperCardTitle {
     @extend .display-4;
 }
 
-
+//Estilos para botones
+.btn-secondary{
+    @extend .text-white
+}
 
 
 
@@ -117,9 +125,17 @@ form {
         box-shadow: $box-shadow;
     }
 
+
     label {
         overflow-x: scroll;
         max-width: 100%;
+    }
+    .input-group-text{
+        background-color: $body-bg;
+        color: $body-color;
+        border: $border;
+        @extend .ms-3;
+        cursor: pointer;
     }
 
     fieldset {
@@ -130,9 +146,28 @@ form {
         }
 
         legend {
-            @extend .position-absolute, .top-0, .translate-middle-y, .bg-primary, .w-auto, .p-1, .rounded-3, .text-white, .px-2;
+            @extend .position-absolute, .top-0, .translate-middle-y, .bg-primary, .w-auto, .p-1, .rounded-3, .text-white, .px-2, .fs-6;
         }
+
     }
+
+    input[type="radio"]:checked + label {
+        @extend .text-primary;
+    }
+}
+
+//Estilos para tablas
+
+//Estilos para badges
+.badge{
+    background-color: $primary-bg-subtle;
+    color: $primary;
+    @extend .small, .p-1, .rounded, .text-nowrap, .fw-normal;
+}
+
+.badge-secondary{
+    @extend .badge, .text-white;
+    background-color: $secondary;
 }
 
 
@@ -149,6 +184,36 @@ form {
     max-width: 750px;
 }
 
+@for $i from 1 through 150 {
+    .max-width-#{calc($i*10)} {
+        max-width: calc($i*10px);
+    }
+}
+
+@for $i from 1 through 5 {
+    .spacer-#{$i} {
+        @extend .m-#{$i};
+    }
+}
+
+
+.squareRatio{
+    aspect-ratio: 1;
+}
+.fill {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden
+}
+.fill img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover
+}
+.roundPhoto{
+    @extend .fill, .squareRatio, .rounded-circle
+}
 
 
 
@@ -196,4 +261,22 @@ form {
     to {
         transform: rotate(360deg);
     }
+}
+
+//Animación de borrado
+.selectedForDelete {
+    animation: tilt-n-move-shaking 0.5s infinite;
+}
+@keyframes tilt-n-move-shaking {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(5px, 5px) rotate(2deg); }
+    50% { transform: translate(0, 0) rotate(0deg); }
+    75% { transform: translate(-5px, 5px) rotate(-2deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+
+//Sweet Alert z-index
+.swal2-container {
+    z-index: 99999999999999;
 }

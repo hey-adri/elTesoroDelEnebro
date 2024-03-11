@@ -2,6 +2,7 @@
 
 namespace App\Models\Clue;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -9,15 +10,7 @@ class ClueEmbeddedVideo extends Model
 {
     use HasFactory;
 
-    //Upon clue creation, we'll generate the embedded link
-    protected static function boot()
-    {
-        parent::boot();
-        self::creating(function (ClueEmbeddedVideo $video){
-            $video->src = self::generateEmbeddedLink($video->type, $video->src); //Generating proper embed link from the created value
-
-        });
-    }
+    protected $guarded=['id'];
 
     /**
      * One embedded Video belongs to one clue
@@ -50,5 +43,20 @@ class ClueEmbeddedVideo extends Model
             default:
                 return $inputLink;
         }
+    }
+
+
+
+    /**
+     * Mutators and Accessors
+     */
+
+    protected function src(): Attribute
+    {
+        return Attribute::make(
+            set: function (string $value){
+                return self::generateEmbeddedLink('youtube',$value); //Generating proper embed link from the input value
+            }
+        );
     }
 }
