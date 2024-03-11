@@ -5,12 +5,9 @@ namespace App\Http\Controllers\Main;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Helpers\HelperController;
 use App\Models\TreasureHunt;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use function Laravel\Prompts\search;
 
 class TreasureHuntController extends Controller
 {
@@ -132,9 +129,9 @@ class TreasureHuntController extends Controller
         return view('treasureHunts.edit',[
             'treasureHunt'=>$treasureHunt,
             'backTo'=>[
-                'route'=>route('admin.treasureHunts.index'),
+                'route'=>route('treasureHunt.show',['treasureHunt'=>$treasureHunt]),
                 'icon'=>'fa-book',
-                'name'=>__('Admin. Búsquedas del Tesoro')
+                'name'=>$treasureHunt->title
             ],
         ]
         );
@@ -198,6 +195,8 @@ class TreasureHuntController extends Controller
 
     //Todo
     public function generateQRCodes(TreasureHunt $treasureHunt){
-        return 'Todo';
+        $pdfFilename=str_replace("-", " ", __('El Tesoro Del Enebro'.' '.$treasureHunt->title.' '.now()).'.pdf');
+        return Pdf::loadView('treasureHunts.qrCodes.pdf',['treasureHunt'=>$treasureHunt])->download($pdfFilename);
+
     }
 }
