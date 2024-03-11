@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Helpers\HelperController;
 use App\Http\Controllers\Main\UserController;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AdminUserController extends UserController
 {
+
     public function index(){
         $filters=[];
         //Getting filters and sorting from request
@@ -38,6 +41,43 @@ class AdminUserController extends UserController
         ]);
     }
 
+    /**
+     * Returns the view admin.users.create
+     * @param User $user
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Foundation\Application
+     */
+    public function create()
+    {
+        return view('admin.users.create',[
+            'backTo'=>[
+                'route'=>route('admin.users.index'),
+                'icon'=>'fa-users-gear',
+                'name'=>__('Admin. Usuarios')
+            ],
+        ]);
+    }
+
+    public function store(){
+        //Validating
+        $attributes = UserController::validateCurrentRequest('create');
+        //Sanitizing
+        HelperController::sanitizeArray($attributes); //Sanitizing input
+        try {
+            //Creating and storing the user
+            $user = User::create($attributes); //Al crear un objeto usuario, la contraseña se guarda encriptada
+            //Redirecting to users.index
+            return redirect(route('admin.users.index'))->with('toast', [
+                'icon' => 'success',
+                'text' => __('Usuario').' '.$user->username.' '.__('creado')
+            ]);
+        } catch (\Exception $exception) {
+            Log::log('error',$exception->getMessage());
+            return redirect()->back()->with('toast',[
+                'icon' => 'error',
+                'text'=>__('Vaya, ha habido un error.')
+            ]);
+        }
+    }
 
     /**
      * Returns the view admin.users.edit
@@ -63,18 +103,6 @@ class AdminUserController extends UserController
      */
     public function update(User $user)
     {
-        //Modifying request parameters to prevent injection directly to the standard controller
-        if(\request('grantAdministrationPrivileges')){
-            \request()->merge([
-                'isAdmin'=>
-                    (\request('grantAdministrationPrivileges')=='true'?true:false)
-            ]);
-        }
-        if(\request('maximumProClues')){
-            \request()->merge([
-                'max_pro_clues'=> \request('maximumProClues')
-            ]);
-        }
         //Running update
         $returnValue = parent::update($user);
         if (session('toast')['icon']=='success'){
@@ -94,7 +122,7 @@ class AdminUserController extends UserController
     public function destroy(User $user)
     {
         try {
-            $this->deleteProfileImageFromStorage($user);
+            self::deleteProfileImageFromStorage($user);
             $user->deleteOrFail();
             return redirect()->back()->with('toast', [
                 'icon' => 'success',

@@ -17,24 +17,12 @@ class RegisterController extends Controller
 
     public function store(){
         //Validating
-        $attributes = request()->validate(
-            [
-                "name"=>["required","max:255"],
-                "email"=>["required","email","max:255",Rule::unique('users','email')],
-                "username"=>["required","regex:/^(?=.{4,20}$)[a-z0-9._-]+$/",Rule::unique('users','username')],
-                "password"=>["required","regex:/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\d$&+,:;=?@#|'<>.^*()%! -]{8,30}$/","max:255"],
-            ]
-        );
+        $attributes = UserController::validateCurrentRequest('create');
         //Sanitizing
         HelperController::sanitizeArray($attributes); //Sanitizing input
         try {
             //Creating and storing the user
-            $user = User::create([
-                'name'=>$attributes['name'],
-                'email'=>$attributes['email'],
-                'username'=>$attributes['username'],
-                'password'=>$attributes['password']
-            ]); //Al crear un objeto usuario, la contraseña se guarda encriptada
+            $user = User::create($attributes); //Al crear un objeto usuario, la contraseña se guarda encriptada
 
             //Logging in the new user
             auth()->login($user);

@@ -4,15 +4,14 @@
             <div class="row g-5 justify-content-center">
                 <div class="col-12 max-width-sm">
                     <article>
-                        <x-user.createUserForm :adminFeatures="false"/>
+                        <x-user.createUserForm :adminFeatures="true"/>
                     </article>
-                </div>
-                <div class="p-2 mt-5 d-flex justify-content-center">
-                    <img src="{{asset('/assets/img/logos/logoPrimary.svg')}}" class="img-fluid max-width-60" alt="" srcset="">
                 </div>
             </div>
     </x-slot>
-    <x-slot name="floatingButtons"></x-slot>
+    <x-slot name="floatingButtons">
+        <x-extras.backButton :backTo="$backTo"/>
+    </x-slot>
     <x-slot name="scripts">
     </x-slot>
 </x-layout.baseLayout>

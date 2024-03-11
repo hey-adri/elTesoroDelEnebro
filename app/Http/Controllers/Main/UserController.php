@@ -36,38 +36,8 @@ class UserController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function update(User $user){
-        //Validating required attributes
-        $attributes = request()->validate(
-            [
-                "name"=>["required","max:255"],
-                "email"=>["required","email","max:255",Rule::unique('users','email')->ignore($user->id,'id')], //Ignoring this user's fields in unique
-                "username"=>["required","regex:/^(?=.{4,20}$)[a-z0-9._-]+$/",Rule::unique('users','username')->ignore($user->id,'id')], //Ignoring this user's fields in unique
-                'isAdmin'=>['nullable','boolean'],
-                'max_pro_clues'=>['nullable','integer']
-            ]
-        );
-
-        //Validating optional attributes
-        if(!empty(\request("password"))){
-            //Received a password, validating
-            \request()->validate([
-                "password"=>["required","regex:/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\d$&+,:;=?@#|'<>.^*()%! -]{8,30}$/","max:255"],
-            ]);
-            //Storing the password to attributes
-            $attributes['password'] = request("password");
-        }
-        if(!empty(\request('profile_image'))){
-            //Received an image, validating
-            \request()->validate([
-                "profile_image"=>["image","max:".env('MAX_PROFILE_IMAGE_SIZE')], //Image should be of type image
-            ]);
-            //Saving the new image and storing to attributes
-            $attributes['profile_image'] = request()->file('profile_image')->store('user/profileImages');
-            $this->deleteProfileImageFromStorage($user);
-        }
-
-        //Deleting Profile image if requested
-        if(!empty(\request('deleteImage'))) $this->deleteProfileImageFromStorage($user);
+        //Validating current request
+        $attributes = self::validateCurrentRequest('update',$user);
 
         //Sanitizing input
         HelperController::sanitizeArray($attributes);
@@ -91,7 +61,7 @@ class UserController extends Controller
 
     public function destroy(User $user){
         try {
-            $this->deleteProfileImageFromStorage($user);
+            self::deleteProfileImageFromStorage($user);
             $user->deleteOrFail();
             auth()->logout();
             return redirect()->route('home')->with('toast', [
@@ -107,11 +77,74 @@ class UserController extends Controller
     }
 
     /**
+     * Validates and returns attributes array for update or create
+     * @param $method
+     * @param null $user User to update, in case of update
+     * @return array to update, or create
+     */
+    public static function validateCurrentRequest($method='create', $user=null){
+        $attributes = [];
+        if ($method=='create'){
+            //On creation
+            $attributes = request()->validate(
+                [
+                    "name"=>["required","max:255"],
+                    "email"=>["required","email","max:255",Rule::unique('users','email')],
+                    "username"=>["required","regex:/^(?=.{4,20}$)[a-z0-9._-]+$/",Rule::unique('users','username')],
+                    "password"=>["required","regex:/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\d$&+,:;=?@#|'<>.^*()%! -]{8,30}$/","max:255"],
+                ]
+            );
+        }else if ($method=='update'){
+            //On update
+            //Validating required attributes
+            $attributes = request()->validate(
+                [
+                    "name"=>["required","max:255"],
+                    "email"=>["required","email","max:255",Rule::unique('users','email')->ignore($user->id,'id')], //Ignoring this user's fields in unique
+                    "username"=>["required","regex:/^(?=.{4,20}$)[a-z0-9._-]+$/",Rule::unique('users','username')->ignore($user->id,'id')], //Ignoring this user's fields in unique
+                ]
+            );
+
+            //Validating optional attributes
+            if(!empty(\request("password"))){
+                //Received a password, validating
+                \request()->validate([
+                    "password"=>["required","regex:/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\d$&+,:;=?@#|'<>.^*()%! -]{8,30}$/","max:255"],
+                ]);
+                //Storing the password to attributes
+                $attributes['password'] = request("password");
+            }
+            if(!empty(\request('profile_image'))){
+                //Received an image, validating
+                \request()->validate([
+                    "profile_image"=>["image","max:".env('MAX_PROFILE_IMAGE_SIZE')], //Image should be of type image
+                ]);
+                //Saving the new image and storing to attributes
+                $attributes['profile_image'] = request()->file('profile_image')->store('user/profileImages');
+                self::deleteProfileImageFromStorage($user);
+            }
+
+            //Deleting Profile image if requested
+            if(!empty(\request('deleteImage'))) self::deleteProfileImageFromStorage($user);
+        }
+
+        //Having into account AdminFeaturesFields only if there's an admin signed in
+        if(auth()?->user()?->isAdmin){
+            $attributes= array_merge($attributes, \request()->validate([
+                'isAdmin'=>['nullable','boolean'],
+                'max_pro_clues'=>['nullable','integer']
+            ]));
+        }
+        return $attributes;
+
+    }
+
+    /**
      * Sets an user Default profile image
      * @param User $user
      * @return void
      */
-    protected function setDefaultProfileImage(User $user){
+    protected static function setDefaultProfileImage(User $user){
         $user->profile_image = User::getRandomProfileImagePath();
     }
 
@@ -120,7 +153,7 @@ class UserController extends Controller
      * @param User $user
      * @return void
      */
-    protected function deleteProfileImageFromStorage(User $user){
+    protected static function deleteProfileImageFromStorage(User $user){
         if(!User::isImagePathDefault($user->profile_image)){
             if(Storage::exists($user->profile_image)){
                 Storage::delete($user->profile_image);

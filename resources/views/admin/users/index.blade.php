@@ -5,10 +5,13 @@
             <section class="treasureHuntsSection">
                 <div class="col-12 d-flex justify-content-center">
                     <article class="paperCard max-width-lg w-100">
-                        <div class="d-flex flex-column flex-lg-row align-items-center justify-content-center gap-2 mb-2">
+                        <div class="d-flex flex-column flex-lg-row align-items-center justify-content-between gap-2 mb-2">
                             <div class="d-flex justify-content-center gap-2 align-items-center">
                                 <span class="fs-3 text-primary pb-2"><i class="fa-solid fa-users-gear"></i></span>
                                 <h1 class="paperCardTitle d-inline-block">{{__('Administración de Usuarios')}}</h1>
+                            </div>
+                            <div class="">
+                                <a href="{{route('admin.users.create')}}" class="btn btn-outline-primary"><i class="fa-solid fa-plus me-0"></i><i class="fa-solid fa-user"></i> {{__('Crear un Usuario')}}</a>
                             </div>
                         </div>
                         <x-extras.searchFilter :tooltip="__('Buscar por nombre de usuario, email o nombre...')">

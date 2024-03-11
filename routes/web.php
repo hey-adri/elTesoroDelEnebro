@@ -86,28 +86,31 @@ Route::middleware(['auth'])->group(function(){
     });
 
     //Admins Section
-    //Todo middleWare
-    Route::get('admin/users',[AdminUserController::class,'index'])->name('admin.users.index');
-    Route::get('admin/user/{user}/edit',[AdminUserController::class,'edit'])->name('admin.users.edit');
-    Route::put('admin/user/{user}/edit',[AdminUserController::class,'update'])->name('admin.users.update');
-    Route::delete('admin/user/{user}/destroy',[AdminUserController::class,'destroy'])->name('admin.users.destroy');
+    Route::middleware('adminsOnly')->group(function (){
+        //Users
+        Route::get('admin/users',[AdminUserController::class,'index'])->name('admin.users.index');
+        Route::get('admin/users/new',[AdminUserController::class,'create'])->name('admin.users.create');
+        Route::post('admin/users/new',[AdminUserController::class,'store'])->name('admin.users.store');
+        Route::get('admin/user/{user}/edit',[AdminUserController::class,'edit'])->name('admin.users.edit');
+        Route::put('admin/user/{user}/edit',[AdminUserController::class,'update'])->name('admin.users.update');
+        Route::delete('admin/user/{user}/destroy',[AdminUserController::class,'destroy'])->name('admin.users.destroy');
 
-    //TreasureHunts
-    Route::get('admin/treasureHunts',[AdminTreaureHuntController::class,'index'])->name('admin.treasureHunts.index');
-    Route::delete('admin/treasureHunt/{treasureHunt}/destroy',[AdminTreaureHuntController::class,'destroy'])->name('admin.treasureHunts.destroy');
-    Route::get('admin/treasureHunt/{treasureHunt}/qrCodes',[AdminTreaureHuntController::class,'generateQRCodes'])->name('admin.treasureHunts.generateQRCodes');
+        //TreasureHunts
+        Route::get('admin/treasureHunts',[AdminTreaureHuntController::class,'index'])->name('admin.treasureHunts.index');
+        Route::delete('admin/treasureHunt/{treasureHunt}/destroy',[AdminTreaureHuntController::class,'destroy'])->name('admin.treasureHunts.destroy');
+        Route::get('admin/treasureHunt/{treasureHunt}/qrCodes',[AdminTreaureHuntController::class,'generateQRCodes'])->name('admin.treasureHunts.generateQRCodes');
 
-    //Clues
-    Route::get('admin/clues',[AdminClueController::class,'index'])->name('admin.clues.index');
-    Route::get('admin/clue/{clue:clueKey}',[AdminClueController::class,'show'])->name('admin.clues.show');
-    Route::delete('admin/clue/{clue:clueKey}/destroy',[AdminClueController::class,'destroy'])->name('admin.clues.destroy');
+        //Clues
+        Route::get('admin/clues',[AdminClueController::class,'index'])->name('admin.clues.index');
+        Route::get('admin/clue/{clue:clueKey}',[AdminClueController::class,'show'])->name('admin.clues.show');
+        Route::delete('admin/clue/{clue:clueKey}/destroy',[AdminClueController::class,'destroy'])->name('admin.clues.destroy');
+    });
 
 
 
 
 });
 
-//Todo middleWareAdmin
 //Todo 4 QR codes
 //Todo link area personal pantalla principal
 //Todo 7 Translate

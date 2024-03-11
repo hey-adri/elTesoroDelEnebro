@@ -238,11 +238,11 @@
                 },
                 rules: {
                     @if($adminFeatures)
-                    maximumProClues:{
+                    max_pro_clues:{
                         required:true,
                         digits:true
                     },
-                    grantAdministrationPrivileges:{
+                    isAdmin:{
                         required:true
                     },
                     @endif

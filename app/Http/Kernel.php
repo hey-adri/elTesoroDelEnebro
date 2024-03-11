@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AdminsOnly;
 use App\Http\Middleware\CluesOwnersOnly;
 use App\Http\Middleware\CurrentUserOnly;
 use App\Http\Middleware\Localization;
@@ -72,6 +73,7 @@ class Kernel extends HttpKernel
         'localize'=>Localization::class,
         'cluesOwnerOnly'=>CluesOwnersOnly::class,
         'treasureHuntOwnersOny'=>TreasureHuntsOwnersOnly::class,
-        'currentUserOnly'=>CurrentUserOnly::class
+        'currentUserOnly'=>CurrentUserOnly::class,
+        'adminsOnly'=>AdminsOnly::class,
     ];
 }
