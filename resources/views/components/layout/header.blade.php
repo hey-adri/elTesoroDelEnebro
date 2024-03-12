@@ -92,7 +92,7 @@
                                     <li class="dropdown-item text-center bg-body">
                                         <a href="{{route('login')}}" class="btn btn-primary">
                                             <i class="fa-solid fa-right-to-bracket m-1"></i>
-                                            {{__('Inciar Sesión')}}
+                                            {{__('Iniciar Sesión')}}
                                         </a>
                                     </li>
                                     <li class="dropdown-item text-center bg-body">

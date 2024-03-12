@@ -14,6 +14,7 @@ use App\Http\Controllers\Main\UserAreaController;
 use App\Http\Controllers\Main\UserController;
 use App\Models\Clue\Clue;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -105,19 +106,5 @@ Route::middleware(['auth'])->group(function(){
         Route::get('admin/clue/{clue:clueKey}',[AdminClueController::class,'show'])->name('admin.clues.show');
         Route::delete('admin/clue/{clue:clueKey}/destroy',[AdminClueController::class,'destroy'])->name('admin.clues.destroy');
     });
-
-
-
-
-});
-
-
-
-//todo change link area personal on home
-//Todo 7 Translate
-//Todo add pretty email if you want to
-//Todo add video support if you want to
-Route::get('holas',function (){
-    return 'hpla';
 });
 

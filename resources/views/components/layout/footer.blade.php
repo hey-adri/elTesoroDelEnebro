@@ -9,7 +9,7 @@
         <div class="container d-flex justify-content-center gap-4 align-items-center">
             <span class="text-muted">{{__('Una web de')}} <a href="https://heyadri.ddns.net/" target="_blank">Adrián García</a></span>
             &#xb7;
-            <a href="mailto:{{env('ADMIN_MAIL')}}" class="">
+            <a href="mailto:{{env('CONTACT_MAIL')}}" class="">
                 {{__('Contacto')}}
             </a>
         </div>

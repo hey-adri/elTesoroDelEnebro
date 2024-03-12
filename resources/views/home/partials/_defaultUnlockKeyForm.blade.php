@@ -1,5 +1,5 @@
 <div>
-    <p>¿Deseas desbloquear esta clave?</p>
+    <p>{{__('¿Deseas desbloquear esta clave?')}}</p>
     <form method="post">
         <!-- Default unlockKeyInput -->
         <input type="hidden" name="unlockKey" id="unlockKeyInput" value="${configuration.unlockKey}">

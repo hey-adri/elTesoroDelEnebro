@@ -1,5 +1,5 @@
 <section class="welcomePage">
-    <div class="row g-5 justify-content-center">
+    <div class="row mb-5">
         <div class="col-12 d-flex justify-content-center">
             <div class="paperCard max-width-lg w-100">
                 <div class="d-flex justify-content-center gap-2 align-items-center">
@@ -7,6 +7,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row g-5 justify-content-center flex-md-row-reverse">
         <div class="col-12 col-md-6">
             <article class="paperCard">
                 <div class="d-flex justify-content-center gap-2 align-items-center paperCardTitle">
@@ -71,7 +73,7 @@
                             {{__('Si deseas ver cómo funcionan las pistas por tí mismo, puedes introducir la')}}
                             <span class="fw-bold">
                             <i class="fa-solid fa-qrcode"></i>
-                            {{__('clave de demostración')}} TODO
+                            {{__('clave de demostración')}} DEMO_{{strtoupper(app()->getLocale())}}
                             </span>
                                 {{__('en la sección anterior.')}}
                         </p>
@@ -143,7 +145,7 @@
                                                     {{__('Guardar')}}
                                                 </button>
                                             </div>
-                                            {{__('crearás tu nueva búsqueda y entrarás en la sección "')}}<i class="fa-solid fa-book"></i>{{__('Búsqueda del Tesoro".')}}
+                                            {{__("crearás tu nueva búsqueda y entrarás en la sección '")}}<i class="fa-solid fa-book"></i>{{__('Búsqueda del Tesoro".')}}
                                         </div>
                                     </li>
                                 </ul>
@@ -332,7 +334,7 @@
                                                                 {{__('Si crees que no es suficiente con tu máximo de pistas PRO, puedes contactarnos por correo')}}
                                                             </p>
                                                             <div class="w-100 d-flex justify-content-center my-2">
-                                                                <a href="mailto:{{env('ADMIN_MAIL')}}" class="btn btn-secondary btn-sm">
+                                                                <a href="mailto:{{env('CONTACT_MAIL')}}" class="btn btn-secondary btn-sm">
                                                                     <i class="fa-solid fa-envelope-circle-check"></i>
                                                                     {{__('Envíanos un Correo')}}
                                                                 </a>

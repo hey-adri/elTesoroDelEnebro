@@ -12,23 +12,27 @@ use Illuminate\Support\Facades\Mail;
 
 class MailController extends Controller
 {
-    public static function sendQRCodesMail(TreasureHunt $treasureHunt, string $email){
+    public static function sendQRCodesMail(TreasureHunt $treasureHunt, $user){
+
         $pdfFilename=ucfirst(strtolower(str_replace(" ","_",$treasureHunt->title.' '.__('El Tesoro Del Enebro').' '.now()->valueOf().'.pdf')));
 
         $pdf = Pdf::loadView('treasureHunts.qrCodes.pdf',['treasureHunt'=>$treasureHunt]);
         $mailData=[
-            'emailTo'=>$email,
+            'emailTo'=>$user->email,
             'pdf'=>$pdf,
             'pdfFilename'=>$pdfFilename,
-            'subject'=>__('Tus códigos QR'),
-            'body'=>__('Aquí tienes tus códigos QR')
-        ];
+            'subject'=>__('Envío de códigos QR'),
+            'treasureHunt'=>$treasureHunt,
+            'user'=>$user
+            ];
+
 
         Mail::send(
             'emails.treasureHuntQrCodesMail',
             [
                 'title'=>$mailData['subject'],
-                'body'=>$mailData['body']
+                'user'=>$mailData['user'],
+                'treasureHunt'=>$mailData['treasureHunt']
             ],
             function ($message) use ($mailData){
                 //Setting up the message options

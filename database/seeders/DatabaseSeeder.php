@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Http\Controllers\Helpers\HelperController;
 use App\Models\Clue\Clue;
 use App\Models\Clue\ClueImage;
 use App\Models\Clue\ClueEmbeddedVideo;
@@ -18,6 +19,20 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
+        //Creating Admin User
+        $admin = User::create([
+            'name' => env('DEFAULT_ADMIN'),
+            'username'=>env('DEFAULT_ADMIN'),
+            'email' => env('DEFAULT_ADMIN_MAIL'),
+            'password' => env('DEFAULT_ADMIN_PASSWORD'),
+            'isAdmin'=>true
+        ]);
+        //Creating Demo clues
+        HelperController::generateLocalizedDemoClues($admin);
+
+    }
+
+    private static function createTestBench(){
         $testUser = User::factory()->create([
             'name' => 'Test User',
             'username'=>'testUser',
@@ -75,6 +90,5 @@ class DatabaseSeeder extends Seeder
         User::factory(20)->create();
         Clue::factory(30)->create();
         TreasureHunt::factory(10)->create();
-
     }
 }
