@@ -292,7 +292,7 @@
                 }
                 if(clue.image.src){
                     $(`.imageSection .row`).append(`
-                <div class="imageContainer col-12">
+                <div class="imageContainer col-10 col-sm-6 col-md-8 col-lg-10">
                     <img class="img-fluid w-100 rounded-4 shadow" src="${clue.image.src}">
                 </div>
                 `)
@@ -314,7 +314,7 @@
                 }
                 if(clue.embedded_video.src){
                     $(`.videoSection .row`).append(`
-                <div class="videoContainer col-12">
+                <div class="videoContainer col-10 col-sm-6 col-md-8 col-lg-10">
                     <div class="ratio ratio-16x9">
                         <iframe src="${clue.embedded_video.src}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;" class="rounded-4 shadow" allowfullscreen></iframe>
                     </div>

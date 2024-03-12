@@ -1,14 +1,10 @@
 // Fonts
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Tangerine:wght@400;700&display=swap');
 
-// Variables
-@import 'variables';
-
-
 //Declaración de variables
 $mainFontFamily: 'Poppins', sans-serif;
 
-//Sobreescritura de variables BS
+//Overwriting css Variables
 //Colors
 $primary: #603601;
 $secondary: #E48F45;
@@ -22,12 +18,12 @@ $success: #5F6F52;
 $border-color: $body-color;
 $box-shadow: 6px 6px 12px #fffefc, -6px -6px 12px #E1D7C6, 6px 6px 12px #fffefc, -6px -6px 12px #E1D7C6;
 $border: rgba($body-color,0.3) 2px solid;
-//Texto
+//Text
 $font-family-sans-serif: 'Montserrat', sans-serif;
 $cursiveFont: 'Tangerine', cursive;
 $font-size-base: 1rem;
 $link-color: $primary;
-//Variables Formularios
+//Forms
 $focus-ring-color: white;
 $input-border-width: 0px;
 $input-border-radius: 0.7rem;
@@ -43,14 +39,20 @@ $btn-border-radius: 0.7rem;
 $btn-border-radius-lg: $btn-border-radius;
 //Tables
 $table-color:$primary;
+//Accordion
+$accordion-button-active-bg: $primary;
+$accordion-button-active-color: $textOnPrimary;
+$accordion-icon-active-color:  $textOnPrimary;
+$accordion-border-color: $body-color;
+$accordion-border-radius: 20px;
+$accordion-inner-border-radius: 20px;
 
 
-
-    // Bootstrap
+// Bootstrap
 @import 'bootstrap/scss/bootstrap';
 
 
-//! Sobreescritura variables Swal
+//! Overwriting Swal
 $swal2-background: $body-bg;
 $swal2-outline-color: $body-color;
 $swal2-toast-background: $body-bg;
@@ -69,8 +71,8 @@ $swal2-validation-message-icon-background: $danger;
 //! Swal import
 @import 'sweetalert2/src/sweetalert2.scss';
 
-// ! Estilos para texto
-//Estilos para h1-h6
+// ! Custom styling
+//Headers h1-h6
 @for $i from 1 through 6 {
     h#{$i} {
         font-family: $cursiveFont;
@@ -91,7 +93,7 @@ $swal2-validation-message-icon-background: $danger;
     font-size: 1.5em !important;
 }
 
-//! Estilos para header
+//! Page header
 header {
     .headerLogo {
         height: 50px;
@@ -99,7 +101,7 @@ header {
     }
 }
 
-//Estilos para Cards
+//Cards
 .paperLayer {
     @extend .shadow, .rounded-4;
 }
@@ -112,14 +114,22 @@ header {
     @extend .display-4;
 }
 
-//Estilos para botones
+//Buttons
 .btn-secondary{
     @extend .text-white
 }
 
+.demoButton{
+    font-size: x-small !important;
+    padding: 3px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    @extend .btn-sm;
+}
 
 
-//Estilos para formularios
+
+//Forms
 form {
     .form-control {
         box-shadow: $box-shadow;
@@ -156,9 +166,8 @@ form {
     }
 }
 
-//Estilos para tablas
 
-//Estilos para badges
+//Badges
 .badge{
     background-color: $primary-bg-subtle;
     color: $primary;
@@ -171,7 +180,7 @@ form {
 }
 
 
-//Estilos generales
+//General styling
 .max-width-xs {
     max-width: 430px;
 }
@@ -217,7 +226,7 @@ form {
 
 
 
-//! Miscellaneus
+//! Miscellaneous
 /* Loader */
 .loaderContainer {
     display: flex;
@@ -263,7 +272,7 @@ form {
     }
 }
 
-//Animación de borrado
+//Deleting Animation
 .selectedForDelete {
     animation: tilt-n-move-shaking 0.5s infinite;
 }

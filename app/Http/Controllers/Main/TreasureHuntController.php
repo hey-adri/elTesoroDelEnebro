@@ -198,12 +198,11 @@ class TreasureHuntController extends Controller
 
     public function generateQRCodes(TreasureHunt $treasureHunt){
         //Sending Mail with pdf to current user
-        MailController::sendQRCodesMail($treasureHunt, auth()->user()->email);
+        MailController::sendQRCodesMail($treasureHunt, auth()->user());
         return redirect()->back()->with('popup', [
             'icon' => 'success',
             'title' => __('¡Correo Enviado!'),
             'text' => __('Recibirás tus códigos en').' '.auth()->user()->email.' '.__('en los próximos momentos.')
-
         ]);
 
     }

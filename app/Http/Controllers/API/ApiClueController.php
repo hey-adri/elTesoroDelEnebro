@@ -36,7 +36,7 @@ class ApiClueController extends Controller
                 //Removing sensitive data
                 unset($response['data']['clue']['treasure_hunt']);
                 //Prepending full path if image is local
-                if(!empty($clue->image) && (!str_starts_with($clue->image->src, 'https://'))){
+                if(!empty($clue->image) && (!str_starts_with($clue->image->src, 'https://')) && (!str_starts_with($clue->image->src, 'http://'))){
                     $response['data']['clue']['image']['src'] = asset('storage/'.$clue->image->src);
                 }
 
