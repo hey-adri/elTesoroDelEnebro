@@ -1,5 +1,6 @@
 <x-layout.baseLayout>
-    <x-slot name="links"></x-slot>
+    <x-slot name="links">
+    </x-slot>
     <x-slot name="content">
     </x-slot>
     <x-slot name="floatingButtons">

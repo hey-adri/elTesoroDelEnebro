@@ -43,7 +43,13 @@ $btn-border-radius: 0.7rem;
 $btn-border-radius-lg: $btn-border-radius;
 //Tables
 $table-color:$primary;
-
+//Accordion
+$accordion-button-active-bg: $primary;
+$accordion-button-active-color: $textOnPrimary;
+$accordion-icon-active-color:  $textOnPrimary;
+$accordion-border-color: $body-color;
+$accordion-border-radius: 20px;
+$accordion-inner-border-radius: 20px;
 
 
     // Bootstrap
@@ -115,6 +121,12 @@ header {
 //Estilos para botones
 .btn-secondary{
     @extend .text-white
+}
+
+.demoButton{
+    font-size: x-small !important;
+    padding: 3px;
+    @extend .btn-sm;
 }
 
 

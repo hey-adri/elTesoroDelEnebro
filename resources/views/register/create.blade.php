@@ -7,9 +7,6 @@
                         <x-user.createUserForm :adminFeatures="false"/>
                     </article>
                 </div>
-                <div class="p-2 mt-5 d-flex justify-content-center">
-                    <img src="{{asset('/assets/img/logos/logoPrimary.svg')}}" class="img-fluid max-width-60" alt="" srcset="">
-                </div>
             </div>
     </x-slot>
     <x-slot name="floatingButtons"></x-slot>
