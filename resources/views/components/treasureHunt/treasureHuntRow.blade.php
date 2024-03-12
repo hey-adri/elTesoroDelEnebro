@@ -44,10 +44,12 @@
                      @else
                          data-bs-title="{{__('Para Generar QRs es necesario que exista alguna Pista')}}"
                     @endif>
-                    <a class="btn btn-outline-primary btn-sm w-100 {{!$treasureHunt->clues()->count()>0?'disabled':''}}" href="{{route('admin.treasureHunts.generateQRCodes',['treasureHunt'=>$treasureHunt->id])}}"
-                       data-bs-toggle="tooltip" data-bs-placement="top">
-                        <i class="fa-solid fa-qrcode"></i>
-                    </a>
+                    <form method="GET" action="{{route('admin.treasureHunts.generateQRCodes',['treasureHunt'=>$treasureHunt->id])}}" class="getTreasureHuntQRsForm d-inline-block w-100">
+                        @csrf
+                        <button type="submit" class="getTreasureHuntQRsButton btn btn-outline-primary btn-sm w-100 {{!$treasureHunt->clues()->count()>0?'disabled':''}}"  data-treasureHuntTitle="{{$treasureHunt->title}}">
+                            <i class="fa-solid fa-qrcode"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
             <div>

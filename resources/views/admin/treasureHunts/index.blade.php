@@ -123,6 +123,7 @@
         <x-extras.backButton :backTo="$backTo"/>
     </x-slot>
     <x-slot name="scripts">
+        <x-treasureHunt.getQrsConfirmationScript/>
         <x-treasureHunt.deleteConfirmationScript/>
     </x-slot>
 </x-layout.baseLayout>
