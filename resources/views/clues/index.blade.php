@@ -56,10 +56,10 @@
                 </div>
                 <div class="flex-grow w-100">
                     <select class="form-select w-100" name="sortBy" >
-                        <option value="updated_at" {{ (request('sortBy')==''||(request('sortBy')=='updated_at'))?'selected':''}}>
+                        <option value="updated_at" {{ (request('sortBy')=='updated_at')?'selected':''}}>
                             {{__('Recientes')}}
                         </option>
-                        <option value="order" {{((request('sortBy')=='order')?'selected':'')}}>
+                        <option value="order" {{(request('sortBy')==''||(request('sortBy')=='order')?'selected':'')}}>
                             {{__('Posición')}}
                         </option>
                         <option value="title" {{ ((request('sortBy')=='title')?'selected':'')}}>

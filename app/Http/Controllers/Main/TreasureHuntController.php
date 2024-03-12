@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Helpers\HelperController;
+use App\Http\Controllers\Helpers\MailController;
 use App\Models\TreasureHunt;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class TreasureHuntController extends Controller
 {
@@ -57,7 +59,7 @@ class TreasureHuntController extends Controller
             if (in_array('has_image',$reqFilters)) $filters['has_image']=true;
         }
         if(request('search'))$filters['search_internal']=request('search');
-        $sortBy=request('sortBy','updated_at');
+        $sortBy=request('sortBy','order');
         $sortDirection = request('sortDirection','desc');
 
         //Getting all clues filtered
@@ -193,10 +195,16 @@ class TreasureHuntController extends Controller
         }
     }
 
-    //Todo
+
     public function generateQRCodes(TreasureHunt $treasureHunt){
-        $pdfFilename=str_replace("-", " ", __('El Tesoro Del Enebro'.' '.$treasureHunt->title.' '.now()).'.pdf');
-        return Pdf::loadView('treasureHunts.qrCodes.pdf',['treasureHunt'=>$treasureHunt])->download($pdfFilename);
+        //Sending Mail with pdf to current user
+        MailController::sendQRCodesMail($treasureHunt, auth()->user()->email);
+        return redirect()->back()->with('popup', [
+            'icon' => 'success',
+            'title' => __('¡Correo Enviado!'),
+            'text' => __('Recibirás tus códigos en').' '.auth()->user()->email.' '.__('en los próximos momentos.')
+
+        ]);
 
     }
 }

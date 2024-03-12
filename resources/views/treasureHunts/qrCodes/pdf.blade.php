@@ -15,10 +15,11 @@
         }
         .qrCard{
             text-align: center;
-            width: 16.6vw;
+            width: 68px;
             height: 150px;
             overflow: hidden;
-            border: #603601 solid 2px;
+            border: rgba(96, 54, 1, 1) solid 1px;
+            border-radius: 10px;
             margin: auto;
             padding: 15px 22px 30px 22px;
         }
@@ -65,7 +66,7 @@
     <div style="text-align: right">
 
         <h3 >
-            <span style="opacity: 0.5; font-size: 13px">~ De {{$treasureHunt->owner->name}} / {{$treasureHunt->getLastUpdate()->format('l j F Y')}} </span>
+            <span style="opacity: 0.5; font-size: 13px">~ De {{$treasureHunt->owner->name}} / {{\Illuminate\Support\Carbon::parse($treasureHunt->getLastUpdate())->translatedFormat('d F Y')}} </span>
             {{__('El Tesoro del Enebro')}}
         </h3>
     </div>
@@ -100,42 +101,6 @@
             @endforeach
         </tr>
     </table>
-    <div style="text-align: right">
-
-    </div>
-
-    {{--    <table class="text-primary handwritten display-1">--}}
-    {{--        <thead>--}}
-    {{--        <tr>{{$treasureHunt->title}}</tr>--}}
-    {{--        </thead>--}}
-    {{--        <tbody>--}}
-
-    {{--        @foreach($treasureHunt->clues as $clue)--}}
-    {{--            <div class="qrImage" >--}}
-    {{--                --}}{{--                Todo change the image, for testing purposes only --}}
-    {{--                {!! SimpleSoftwareIO\QrCode\Facades\QrCode::color(96,54,1)--}}
-    {{--                                                             ->errorCorrection('H')--}}
-    {{--                                                             ->eye('square',0.5)--}}
-    {{--                                                             ->style('round',0.5)--}}
-    {{--                                                             ->generate(route('home.showKey',['clueKey'=>$clue->clueKey])) !!}--}}
-    {{--                --}}{{--                <img width="100%" src="data:image/png;base64, {!! base64_encode(--}}
-    {{--                --}}{{--                                                    SimpleSoftwareIO\QrCode\Facades\QrCode::size(512)--}}
-    {{--                --}}{{--                                                            ->format('png')--}}
-    {{--                --}}{{--                                                             ->merge('assets/img/logos/logoQr.png', 0.35, true)--}}
-    {{--                --}}{{--                                                             ->color(96,54,1)--}}
-    {{--                --}}{{--                                                             ->errorCorrection('H')--}}
-    {{--                --}}{{--                                                             ->eye('square',0.5)--}}
-    {{--                --}}{{--                                                             ->style('round',0.5)--}}
-    {{--                --}}{{--                                                             ->generate(route('home.showKey',['clueKey'=>$clue->clueKey]))--}}
-    {{--                --}}{{--                                                ) !!} ">--}}
-    {{--            </div>--}}
-
-    {{--            <div class="qrImage">--}}
-
-    {{--            </div>--}}
-    {{--        @endforeach--}}
-    {{--        </tbody>--}}
-    {{--    </table>--}}
 </main>
 </body>
 </html>

@@ -111,12 +111,13 @@ Route::middleware(['auth'])->group(function(){
 
 });
 
-//Todo 4 QR codes
-//Todo link area personal pantalla principal
+
+
+//todo change link area personal on home
 //Todo 7 Translate
-Route::get('hola',function (){
-    ddd(\App\Models\TreasureHunt::withCount('clues')
-        ->orderByDesc('clues_count')
-        ->get());
+//Todo add pretty email if you want to
+//Todo add video support if you want to
+Route::get('holas',function (){
+    return 'hpla';
 });
 
