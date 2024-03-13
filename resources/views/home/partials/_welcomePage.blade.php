@@ -17,7 +17,7 @@
                 </div>
                 <p>
                     {{__('Para acceder a su contenido, es suficiente con que escanees su código QR')}}
-                    <i class="fa-solid fa-qrcode"></i>
+                    <i class="fa-solid fa-qrcode"></i>,
                     {{__("no obstante, puedes introducir su clave aquí:")}}
                 </p>
 
@@ -75,7 +75,8 @@
                             <i class="fa-solid fa-qrcode"></i>
                             {{__('clave de demostración')}} DEMO_{{strtoupper(app()->getLocale())}}
                             </span>
-                                {{__('en la sección anterior.')}}
+                                <span class="d-none d-md-inline">{{__('en la sección de la derecha.')}}</span>
+                                <span class="d-md-none">{{__('en la sección superior.')}}</span>
                         </p>
                     </li>
                     <li>

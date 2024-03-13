@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{__('El tesoro del Enebro')}}</title>
+    <title>{{__('El Tesoro del Enebro')}}</title>
     <!-- Css -->
     <link rel="stylesheet" href="{{asset('/assets/css/modules/fontAwesome/fontawesome.css')}}">
     {{$links}}

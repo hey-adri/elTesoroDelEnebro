@@ -5,13 +5,13 @@
             <div class="row align-items-stretch">
                 <div class="col-12 col-sm-5 d-flex align-items-center">
                     <div class="w-100">
-                        <div class="d-flex flex-column flex-md-row gap-2">
+                        <div class="d-flex flex-column flex-lg-row gap-2">
                             <div class="d-flex align-items-center">
-                                <div class="userProfilePhoto roundPhoto max-width-60 mx-auto">
+                                <div class="userProfilePhoto roundPhoto max-width-80 mx-auto me-lg-2 mb-lg-2">
                                     <img class="" src="{{asset('storage/'.$user->profile_image)}}">
                                 </div>
                             </div>
-                            <ul class="list-unstyled text-center text-md-start d-flex flex-column gap-1">
+                            <ul class="list-unstyled text-center text-lg-start d-flex flex-column gap-1">
                                 <li class="fs-6 fw-bold">{{$user->name}}</li>
                                 <li class="small text-muted"><i class="fa-solid fa-user"></i>{{$user->username}}</li>
                                 <li class="small text-muted"><i class="fa-solid fa-at"></i>{{$user->email}}</li>
