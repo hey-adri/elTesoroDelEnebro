@@ -94,6 +94,8 @@ class UserController extends Controller
                     "password"=>["required","regex:/^[a-zA-ZáéíóúüñÁÉÍÓÚÜÑ\d$&+,:;=?@#|'<>.^*()%! -]{8,30}$/","max:255"],
                 ]
             );
+            //Adding default max_pro_clues
+            $attributes['max_pro_clues'] = env('USER_INITIAL_PRO_CLUES');
         }else if ($method=='update'){
             //On update
             //Validating required attributes
