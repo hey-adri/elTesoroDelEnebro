@@ -56,10 +56,8 @@
         else {
             $(`#clueKeyInput`).removeClass("is-invalid").removeClass("is-valid");
         }
-        if ($(`#clueKeyInput`).hasClass('is-invalid') && $(`#analizeButton`).prop("disabled") && $('.clueKeyErrors').hasClass('d-none')) {
+        if ($(`#clueKeyInput`).hasClass('is-invalid')  && $('.clueKeyErrors').hasClass('d-none')) {
             animateShow('.clueKeyErrors',configuration.animationMs)
-        } else if ($(`#clueKeyInput`).hasClass('is-valid')) {
-            animateHide('.clueKeyErrors',configuration.animationMs)
         }
         $(`#analizeButton`).prop("disabled", true);
 
@@ -67,12 +65,14 @@
         configuration.clueKey = $(`#clueKeyInput`).val()
         try {
             //Checking the value in backEnd, enabling button if correct
+            const checkedKey = configuration.clueKey //Making sure the checked key hasn't changed after async request
             const json = await queryCheckClueDetails()
-            if (!json.error) {
+            if ((!json.error)&&(configuration.clueKey==checkedKey)) {
                 //Correct key found, enabling submit
                 $(`#analizeButton`).prop("disabled", false);
                 $(`#clueKeyInput`).removeClass("is-invalid").addClass("is-valid");
                 animateHide('.clueKeyErrors',configuration.animationMs)
+                console.log('correct')
             }
         } catch (error) {
             showPopup(`{{__('Error en Conexión con BD')}}`,`{{__('Error')}}`,`{{__('error')}}`)
