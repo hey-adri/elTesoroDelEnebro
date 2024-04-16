@@ -72,7 +72,6 @@
                 $(`#analizeButton`).prop("disabled", false);
                 $(`#clueKeyInput`).removeClass("is-invalid").addClass("is-valid");
                 animateHide('.clueKeyErrors',configuration.animationMs)
-                console.log('correct')
             }
         } catch (error) {
             showPopup(`{{__('Error en Conexión con BD')}}`,`{{__('Error')}}`,`{{__('error')}}`)
