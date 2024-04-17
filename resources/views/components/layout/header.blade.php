@@ -23,7 +23,7 @@
                     <button type="button" class="btn btn-lg btn-outline-primary border-0 d-md-none"
                             data-bs-dismiss="offcanvas" aria-label="Close">
                         <i class="fa-solid fa-xmark"></i>
-                    </button>git
+                    </button>
                 </div>
                 <div class="offcanvas-body text-nowrap">
                     <ul class="navbar-nav gap-4 justify-content-end align-items-start flex-grow-1 p-3">
