@@ -64,8 +64,11 @@ class TreasureHunt extends Model
                 });
             })
             ->when($filters['search_internal'] ?? false, function ( $query, $searchInternal) {
-                $query->whereHas('clues', function ( $query) use ($searchInternal) {
-                    $query->where('title', 'like', '%' . $searchInternal . '%');
+                $query->where(function ( $query) use ($searchInternal) {
+                    $query->where('title', 'like', '%' . $searchInternal . '%')
+                        ->orWhereHas('clues', function ( $query) use ($searchInternal) {
+                            $query->where('title', 'like', '%' . $searchInternal . '%');
+                        });
                 });
             });
         if($sortBy=='updated_at'){
