@@ -414,29 +414,31 @@
 
     //! unlockKey keyChain Functions
     /**
-     * Stores the unlockKey for one clueKey in the keychain
+     * Stores the unlockKey for one clueKey in the keychain only if the unlockKey is different from 'default'
      * @param {*} clueKey
      * @param {*} unlockKey
      */
     const storeClueUnlockKey = (clueKey, unlockKey) => {
-        let keyChain = [];
-        //Retrieving the previous keyChain in case it's stored
-        let previusKeyChain = localStorage.getItem("keyChain")
-        if (previusKeyChain != null) {
-            previusKeyChain = JSON.parse(decodeURI(previusKeyChain))
-            keyChain = [...previusKeyChain];
-        }
-        //Removing old entries in order to overwrite
-        keyChain = keyChain.filter(entry => entry.clueKey != clueKey)
-        //Creating another entry
-        keyChain.push(
-            {
-                clueKey: clueKey,
-                unlockKey: unlockKey
+        if(unlockKey!='default'){
+            let keyChain = [];
+            //Retrieving the previous keyChain in case it's stored
+            let previusKeyChain = localStorage.getItem("keyChain")
+            if (previusKeyChain != null) {
+                previusKeyChain = JSON.parse(decodeURI(previusKeyChain))
+                keyChain = [...previusKeyChain];
             }
-        )
-        //Storing the updated keyChain
-        localStorage.setItem("keyChain", encodeURI(JSON.stringify(keyChain)))
+            //Removing old entries in order to overwrite
+            keyChain = keyChain.filter(entry => entry.clueKey != clueKey)
+            //Creating another entry
+            keyChain.push(
+                {
+                    clueKey: clueKey,
+                    unlockKey: unlockKey
+                }
+            )
+            //Storing the updated keyChain
+            localStorage.setItem("keyChain", encodeURI(JSON.stringify(keyChain)))
+        }
     }
 
     /**
