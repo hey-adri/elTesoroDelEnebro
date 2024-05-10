@@ -18,17 +18,20 @@ class ClueEmbeddedVideoController extends Controller
         $attributes = [];
         if ($method=='create'){
             //On creation
-            //Returning populated attributes only if embedded_video_src present, required for creation
-            if(!empty(request('embedded_video_src'))){
-                $validation = \request()->validate([
-                    "embedded_video_src"=>['required',"regex:/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|live\/|v\/)?)([\w\-]+)(\S+)?$/"],
-                    "embedded_video_title"=>["max:255"],
-                    "embedded_video_caption"=>["max:255"],
-                ]);
-                //Saving the new image and storing to imageAttributes
-                $attributes['src'] = request('embedded_video_src');
-                $attributes["title"] = request('embedded_video_title');
-                $attributes["caption"] = request('embedded_video_caption');
+            //Creating only if user has some pro clues left
+            if(auth()?->user()?->proCluesLeft()>0){
+                //Returning populated attributes only if embedded_video_src present, required for creation
+                if(!empty(request('embedded_video_src'))){
+                    $validation = \request()->validate([
+                        "embedded_video_src"=>['required',"regex:/^((?:https?:)?\/\/)?((?:www|m)\.)?((?:youtube(-nocookie)?\.com|youtu.be))(\/(?:[\w\-]+\?v=|embed\/|live\/|v\/)?)([\w\-]+)(\S+)?$/"],
+                        "embedded_video_title"=>["max:255"],
+                        "embedded_video_caption"=>["max:255"],
+                    ]);
+                    //Saving the new image and storing to imageAttributes
+                    $attributes['src'] = request('embedded_video_src');
+                    $attributes["title"] = request('embedded_video_title');
+                    $attributes["caption"] = request('embedded_video_caption');
+                }
             }
         }else{
             //On update

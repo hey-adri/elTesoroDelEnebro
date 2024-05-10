@@ -36,17 +36,20 @@ class ClueImageController extends Controller
         $attributes = [];
         if ($method=='create'){
             //On creation
-            //Returning populated attributes only if image_src present, required for creation
-            if(!empty(request('image_src'))){
-                \request()->validate([
-                    "image_src"=>['required',"image","max:".env('MAX_CLUE_IMAGE_SIZE')],
-                    "image_title"=>["max:255"],
-                    "image_caption"=>["max:255"],
-                ]);
-                //Saving the new image and storing to imageAttributes
-                $attributes['src'] = request()->file('image_src')->store('clues/images');
-                $attributes["title"] = request('image_title');
-                $attributes["caption"] = request('image_caption');
+            //Creating only if user has some pro clues left
+            if(auth()?->user()?->proCluesLeft()>0){
+                //Returning populated attributes only if image_src present, required for creation
+                if(!empty(request('image_src'))){
+                    \request()->validate([
+                        "image_src"=>['required',"image","max:".env('MAX_CLUE_IMAGE_SIZE')],
+                        "image_title"=>["max:255"],
+                        "image_caption"=>["max:255"],
+                    ]);
+                    //Saving the new image and storing to imageAttributes
+                    $attributes['src'] = request()->file('image_src')->store('clues/images');
+                    $attributes["title"] = request('image_title');
+                    $attributes["caption"] = request('image_caption');
+                }
             }
         }else{
             //On update
