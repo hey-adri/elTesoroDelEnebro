@@ -63,18 +63,20 @@
 
         //Updating the clueKey with the value in the input
         configuration.clueKey = $(`#clueKeyInput`).val()
-        try {
-            //Checking the value in backEnd, enabling button if correct
-            const checkedKey = configuration.clueKey //Making sure the checked key hasn't changed after async request
-            const json = await queryCheckClueDetails()
-            if ((!json.error)&&(configuration.clueKey==checkedKey)) {
-                //Correct key found, enabling submit
-                $(`#analizeButton`).prop("disabled", false);
-                $(`#clueKeyInput`).removeClass("is-invalid").addClass("is-valid");
-                animateHide('.clueKeyErrors',configuration.animationMs)
+        if(configuration.clueKey != null && configuration.clueKey != "") { //Making the request only if there's an input value
+            try {
+                //Checking the value in backEnd, enabling button if correct
+                const checkedKey = configuration.clueKey //Making sure the checked key hasn't changed after async request
+                const json = await queryCheckClueDetails()
+                if ((!json.error)&&(configuration.clueKey==checkedKey)) {
+                    //Correct key found, enabling submit
+                    $(`#analizeButton`).prop("disabled", false);
+                    $(`#clueKeyInput`).removeClass("is-invalid").addClass("is-valid");
+                    animateHide('.clueKeyErrors',configuration.animationMs)
+                }
+            } catch (error) {
+                showPopup(`{{__('Error en Conexión con BD')}}`,`{{__('Error')}}`,`{{__('error')}}`)
             }
-        } catch (error) {
-            showPopup(`{{__('Error en Conexión con BD')}}`,`{{__('Error')}}`,`{{__('error')}}`)
         }
     }
 
