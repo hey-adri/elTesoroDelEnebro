@@ -212,11 +212,12 @@ form {
 .fill {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     overflow: hidden
 }
 .fill img {
     width: 100%;
+    min-height: 100%;
     object-fit: cover
 }
 .roundPhoto{
