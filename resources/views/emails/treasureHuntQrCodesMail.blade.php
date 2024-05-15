@@ -347,7 +347,7 @@
                                             <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Montserrat',sans-serif;" align="left">
 
                                                 <div style="font-size: 14px; color: #311a00; line-height: 140%; text-align: center; word-wrap: break-word;">
-                                                    <p style="line-height: 140%;">{{__('Una web de')}} <a target="_blank" href="https://heyadri.ddns.net/" rel="noopener">Adrián García</a> - <a target="_blank" href="mailto:heyadriangarcia@gmail.com" rel="noopener">{{__('Contacto')}}</a></p>
+                                                    <p style="line-height: 140%;">{{__('Una web de')}} <a target="_blank" href="https://heyadri.uk.to/" rel="noopener">Adrián García</a> - <a target="_blank" href="mailto:heyadriangarcia@gmail.com" rel="noopener">{{__('Contacto')}}</a></p>
                                                 </div>
 
                                             </td>
