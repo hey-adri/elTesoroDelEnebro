@@ -7,7 +7,7 @@
         event.preventDefault()
         const form = $(event.target).closest('form')
         showAccountDeleteDialog(
-            `{{__('Soy consciente de que eliminando la cuenta ')}} "${$(event.target).closest('button').attr(`data-username`)}", se eliminarán todas sus Búsquedas del Tesoro y Pistas.`,
+            `{{__('Soy consciente de que eliminando la cuenta ')}} "${$(event.target).closest('button').attr(`data-username`)}", {{__('se eliminarán todas sus Búsquedas del Tesoro y Pistas.')}}`,
             `{{__('¿Estás Seguro?')}}`,
             `{{__('Eliminar Cuenta y todos sus recursos')}}`,
             `{{__('Marca la casilla para eliminar ésta cuenta')}}`,
