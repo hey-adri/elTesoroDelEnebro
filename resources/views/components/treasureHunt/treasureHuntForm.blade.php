@@ -34,6 +34,10 @@
                 ><i class="fa-solid fa-question"></i></span>
             </div>
         </div>
+        @if($method=='create')
+            {{-- Recaptcha Field--}}
+            {!! RecaptchaV3::field('treasureHunt') !!}
+        @endif
         {{-- Submit --}}
         <div class="mb-4">
             <div class="row">

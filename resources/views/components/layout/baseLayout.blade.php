@@ -69,6 +69,13 @@
     </script>
 @endif
 
+@error('g-recaptcha-response')
+    <script>
+        $(()=>{
+            showToast("{{__("¿Eres un humano?")}}",'error')
+        })
+    </script>
+@enderror
 
 {{$scripts}}
 

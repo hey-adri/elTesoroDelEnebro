@@ -95,6 +95,9 @@
                     <x-user.adminFeaturesFields/>
                 </div>
                 <hr>
+        @else
+            {{-- Recaptcha Field--}}
+            {!! RecaptchaV3::field('register') !!}
         @endif
         <div class="mb-4">
             <div class="row">

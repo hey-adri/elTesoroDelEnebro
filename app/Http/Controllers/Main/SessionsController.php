@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Main;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Lunaweb\RecaptchaV3\Facades\RecaptchaV3;
 
 class SessionsController extends Controller
 {
@@ -23,11 +24,15 @@ class SessionsController extends Controller
      * @throws ValidationException
      */
     public function store (){
+        //Validating captcha
+        \request()->validate([
+            'g-recaptcha-response' => 'required|recaptchav3:login,'.env('RECAPTCHA_SCORE')
+        ]);
         //Validating the request fields
         $attributes = request()->validate(
             [
                 'username'=>['required','max:255'],
-                'password'=>['required','max:255']
+                'password'=>['required','max:255'],
             ]
         );
 

@@ -1,5 +1,8 @@
 <x-layout.baseLayout>
-    <x-slot name="links"></x-slot>
+    <x-slot name="links">
+        {{--  Recaptcha Call  --}}
+        {!! RecaptchaV3::initJs() !!}
+    </x-slot>
     <x-slot name="content">
 
         <div class="row g-5 justify-content-center">
