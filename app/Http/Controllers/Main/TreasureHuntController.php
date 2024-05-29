@@ -96,6 +96,11 @@ class TreasureHuntController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function store(){
+        //Validating captcha
+        \request()->validate([
+            'g-recaptcha-response' => 'required|recaptchav3:treasureHunt,'.env('RECAPTCHA_SCORE')
+        ]);
+        //Validating attributes
         $attributes = request()->validate(
             [
                 "title"=>["required","max:255"],

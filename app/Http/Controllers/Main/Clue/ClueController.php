@@ -54,6 +54,10 @@ class ClueController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function store(TreasureHunt $treasureHunt){
+        //Validating captcha
+        \request()->validate([
+            'g-recaptcha-response' => 'required|recaptchav3:clue,'.env('RECAPTCHA_SCORE')
+        ]);
         //Validating clueAttributes
         $clueAttributes = self::validateCurrentRequest('create');
         //Validating clueEmbeddedVideo

@@ -26,7 +26,7 @@ class SessionsController extends Controller
     public function store (){
         //Validating captcha
         \request()->validate([
-            'g-recaptcha-response' => 'required|recaptchav3:login,0.7'
+            'g-recaptcha-response' => 'required|recaptchav3:login,'.env('RECAPTCHA_SCORE')
         ]);
         //Validating the request fields
         $attributes = request()->validate(

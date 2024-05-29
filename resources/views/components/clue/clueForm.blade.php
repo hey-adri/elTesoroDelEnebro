@@ -373,6 +373,10 @@
             <x-extras.nothingFound :text="__('Parece que has usado todas tus pistas PRO. Puedes eliminar la sección multimedia de tus pistas PRO para que dejen de serlo...')"/>
         @endif
     </fieldset>
+    @if($method=='create')
+        {{-- Recaptcha Field--}}
+        {!! RecaptchaV3::field('clue') !!}
+    @endif
     <div class="my-4">
         <div class="row">
             <div class="col">

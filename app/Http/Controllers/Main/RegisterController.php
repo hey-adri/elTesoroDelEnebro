@@ -18,7 +18,7 @@ class RegisterController extends Controller
     public function store(){
         //Validating captcha
         \request()->validate([
-            'g-recaptcha-response' => 'required|recaptchav3:register,0.7'
+            'g-recaptcha-response' => 'required|recaptchav3:register,'.env('RECAPTCHA_SCORE')
         ]);
         //Validating
         $attributes = UserController::validateCurrentRequest('create');
