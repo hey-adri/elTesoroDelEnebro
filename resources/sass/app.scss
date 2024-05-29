@@ -289,3 +289,6 @@ form {
 .swal2-container {
     z-index: 99999999999999;
 }
+
+//Hiding Captcha
+.grecaptcha-badge { visibility: hidden; }
