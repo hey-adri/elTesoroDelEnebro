@@ -1,5 +1,8 @@
 <x-layout.baseLayout>
-    <x-slot name="links"></x-slot>
+    <x-slot name="links">
+        {{--  Recaptcha Call  --}}
+        {!! RecaptchaV3::initJs() !!}
+    </x-slot>
     <x-slot name="content">
 
             <div class="row g-5 justify-content-center">
@@ -35,6 +38,8 @@
                                         <span class="input-group-text" id="togglePasswordButton"><i class="fa-solid fa-eye-slash"></i></span>
                                     </div>
                                 </div>
+                                {{-- Recaptcha Field--}}
+                                {!! RecaptchaV3::field('login') !!}
                                 <!-- Submit -->
                                 <div class="mb-4">
                                     <div class="row">
