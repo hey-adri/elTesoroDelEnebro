@@ -77,6 +77,9 @@
     </script>
 @enderror
 
+{{--  Recaptcha Call  --}}
+{!! RecaptchaV3::initJs() !!}
+
 {{$scripts}}
 
 </html>
