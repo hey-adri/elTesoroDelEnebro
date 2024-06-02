@@ -10,6 +10,9 @@
     {{$links}}
     {{--  Custom CSS  --}}
     @vite('resources/sass/app.scss')
+
+    {{--  Recaptcha Call  --}}
+    {!! RecaptchaV3::initJs() !!}
 </head>
 
 <body>
@@ -77,8 +80,6 @@
     </script>
 @enderror
 
-{{--  Recaptcha Call  --}}
-{!! RecaptchaV3::initJs() !!}
 
 {{$scripts}}
 
