@@ -363,7 +363,7 @@
     const showClueHelpButton = () => {
         //Adding the button
         $('.floatingButtons').prepend(
-            `<button class="clueHelpButton btn btn-primary d-none">
+            `<button class="clueHelpButton btn border-0 glassButton rounded-4 growOnHover d-none">
         <i class="fa-solid fa-life-ring"></i>
         <span>{{__('¿Ayuda?')}}</span>
     </button>`
