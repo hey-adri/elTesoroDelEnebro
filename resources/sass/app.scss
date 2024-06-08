@@ -46,6 +46,33 @@ $accordion-icon-active-color:  $textOnPrimary;
 $accordion-border-color: $body-color;
 $accordion-border-radius: 20px;
 $accordion-inner-border-radius: 20px;
+//Mixins
+@mixin glassBg {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 16px;
+    backdrop-filter: blur(9.6px);
+    -webkit-backdrop-filter: blur(9.6px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@mixin glassOpaqueBg() {
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 16px;
+    backdrop-filter: blur(9.6px);
+    -webkit-backdrop-filter: blur(9.6px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@mixin glassBgWShadow {
+    @include glassBg();
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+@mixin glassOpaqueBgWShadow() {
+    @include glassOpaqueBg();
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
 
 
 // Bootstrap
@@ -131,6 +158,19 @@ header {
 //Buttons
 .btn-secondary{
     @extend .text-white
+}
+
+.glassButton{
+    @include glassBgWShadow;
+}
+
+.growOnHover {
+    transition: transform 0.1s ease-in-out;
+
+    &:hover {
+        transform: scale(1.01) translateY(-3px);
+        @include glassBgWShadow();
+    }
 }
 
 .demoButton{
