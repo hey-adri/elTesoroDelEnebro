@@ -17,7 +17,7 @@
 
 <body>
 <div id="topOfThePage"></div> <!-- Top of the page anchor -->
-<div id="viewPort" class="d-flex flex-column min-vh-100 justify-content-between px-2">
+<div id="viewPort" class="d-flex flex-column min-vh-100 justify-content-between px-2 vw-100">
    <x-layout.header/>
     <!-- ! Main Content -->
     <main class="flex-grow-1 d-flex flex-column justify-content-center z-0">

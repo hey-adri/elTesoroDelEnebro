@@ -72,6 +72,20 @@ $swal2-validation-message-icon-background: $danger;
 @import 'sweetalert2/src/sweetalert2.scss';
 
 // ! Custom styling
+
+//Making bs vh and vw dynamic
+.vh-100{
+    height: 100dvh !important;
+}
+.vw-100{
+    width: 100dvw !important;
+}
+.min-vh-100{
+    min-height: 100dvh !important;
+}
+.min-vw-100{
+    min-width: 100dvw !important;
+}
 //Headers h1-h6
 @for $i from 1 through 6 {
     h#{$i} {
