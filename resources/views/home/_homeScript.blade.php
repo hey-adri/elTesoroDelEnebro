@@ -34,7 +34,7 @@
         $('#mainContent').empty();
         $('#mainContent').append(
             `@include('home.partials._welcomePage')
-    `
+            `
         )
         refreshBSTooltips();
         animateShow($('#mainContent .welcomePage'),configuration.animationMs)
@@ -139,15 +139,15 @@
     const printUnlockForm = (data) => {
         let unlockFormView = `
     @include('home.partials._unlockFormView')
-    `;
+        `;
         const customUnlockKeyForm =
             `
     @include('home.partials._customUnlockKeyForm')
-    `;
+            `;
 
         const defaultUnlockKeyForm = `
     @include('home.partials._defaultUnlockKeyForm')
-    `
+        `
         //Hiding the welcomePage if present
         animateDestroy('.welcomePage',configuration.animationMs)
         $('#mainContent').append(unlockFormView)
@@ -271,7 +271,7 @@
         const clue = configuration.clueFoundResponse.clue
         const cluePageView = `
     @include('home.partials._cluePage')
-    `;
+        `;
 
         //Adding the clue to the view
         $('#mainContent').append(cluePageView);
@@ -282,7 +282,7 @@
             $('.clue').append(`<div class="textSection mb-4">${formatAsParagraphs(clue.body)}</div>`)
         }
         //Adding the media section if necessary
-        if(clue.image||clue.embedded_video){
+        if(clue.image||clue.embedded_video||clue.video){
             $('.clue').append(`<div class="mediaSection max-width-xs mx-auto"></div>`);
             if(clue.image){
                 $('.mediaSection').append(`
@@ -306,15 +306,39 @@
                 }
 
             }
-            if(clue.embedded_video){
+            if(clue.video){
                 $('.mediaSection').append(`
             <div class="videoSection mb-4"><div class="row justify-content-center"></div></div>
+            `)
+                if(clue.video.title){
+                    $(`.videoSection .row`).append(`<h4>${clue.video.title}</h4>`)
+                }
+                if(clue.video.src){
+                    $(`.videoSection .row`).append(`
+                <div class="videoContainer col-10 col-sm-6 col-md-8 col-lg-10">
+                    <video id="videoPlayer" preload="metadata" controls onplay="goToStart()" class="img-fluid w-100 rounded-4 shadow">
+                        <source src="${clue.video.src}#t=1">
+                    </video>
+                </div>
+                `)
+                }
+                if(clue.video.caption){
+                    $(`.videoSection .row`).append(`
+                <div class="col-12">
+                    <p class="handwritten text-end mt-2 ">~ ${clue.video.caption}</p>
+                </div>`)
+                }
+
+            }
+            if(clue.embedded_video){
+                $('.mediaSection').append(`
+            <div class="embeddedVideoSection mb-4"><div class="row justify-content-center"></div></div>
             `);
                 if(clue.embedded_video.title){
-                    $(`.videoSection .row`).append(`<h4>${clue.embedded_video.title}</h4>`)
+                    $(`.embeddedVideoSection .row`).append(`<h4>${clue.embedded_video.title}</h4>`)
                 }
                 if(clue.embedded_video.src){
-                    $(`.videoSection .row`).append(`
+                    $(`.embeddedVideoSection .row`).append(`
                 <div class="videoContainer col-10 col-sm-6 col-md-8 col-lg-10">
                     <div class="ratio ratio-16x9">
                         <iframe src="${clue.embedded_video.src}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;" class="rounded-4 shadow" allowfullscreen></iframe>
@@ -323,7 +347,7 @@
                 `)
                 }
                 if(clue.embedded_video.caption){
-                    $(`.videoSection .row`).append(`
+                    $(`.embeddedVideoSection .row`).append(`
                 <div class="col-12">
                     <p class="handwritten text-end mt-2 ">~ ${clue.embedded_video.caption}</p>
                 </div>`)
@@ -363,7 +387,7 @@
     const showClueHelpButton = () => {
         //Adding the button
         $('.floatingButtons').prepend(
-            `<button class="clueHelpButton btn border-0 glassButton rounded-4 growOnHover d-none">
+            `<button class="clueHelpButton btn btn-primary d-none">
         <i class="fa-solid fa-life-ring"></i>
         <span>{{__('¿Ayuda?')}}</span>
     </button>`
@@ -384,7 +408,7 @@
         if(configuration.clueFoundResponse.clue.help){
             $('.cluePage').append(`
         @include('home.partials._clueHelp')
-        `)
+            `)
             animateShow('.clueHelpView',configuration.animationMs)
             scrollTo(".clueHelpView .textSection")
             refreshBSTooltips();
@@ -456,6 +480,15 @@
 
         }
         return retrievedKey
+    }
+
+    /**
+     *
+     */
+    const goToStart = ()=>{
+        if (document.getElementById('videoPlayer').currentTime == 1){
+            document.getElementById('videoPlayer').currentTime = 0;
+        }
     }
 
 
