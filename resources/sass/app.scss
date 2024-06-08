@@ -169,7 +169,7 @@ header {
 
     &:hover {
         transform: scale(1.01) translateY(-3px);
-        @include glassOpaqueBgWShadow();
+        @include glassBgWShadow();
     }
 }
 
