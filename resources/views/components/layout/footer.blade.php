@@ -17,7 +17,7 @@
             <hr>
         </div>
         <div class="container d-flex justify-content-center">
-            <span class="text-muted"><small>© {{__('Una web de')}} <a href="https://heyadri.uk.to/" target="_blank">Adrián García</a> • {{__('Todos los Derechos Reservados')}} • 2024</small></span>
+            <span class="text-muted"><small>© {{__('Una web de')}} <a href="https://heyadri.fr.to/" target="_blank">Adrián García</a> • {{__('Todos los Derechos Reservados')}} • 2024</small></span>
         </div>
     </div>
 </footer>

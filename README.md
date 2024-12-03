@@ -1,10 +1,10 @@
-# [El Tesoro del Enebro](https://enebro.uk.to/)
+# [El Tesoro del Enebro](https://enebro.fr.to/)
 
-![El Tesoro del Enebro](https://enebro.uk.to/assets/img/homeImages/landingThumb.png)
+![El Tesoro del Enebro](https://enebro.fr.to/assets/img/homeImages/landingThumb.png)
 
 El Tesoro del Enebro is a web application designed to create and enjoy real-world treasure hunts or scavenger hunts, face-to-face with other participants. It combines the excitement of a classic treasure hunt with modern QR code technology to offer a unique and memorable experience.
 
-[Deployed URL](https://enebro.uk.to/)
+[Deployed URL](https://enebro.fr.to/)
 
 ## Table of Contents
 
@@ -105,4 +105,4 @@ To run this application, you will need:
 
 ## License
 
-© 2024 [Adrian Garcia](https://heyadri.uk.to/). All rights reserved.
+© 2024 [Adrian Garcia](https://heyadri.fr.to/). All rights reserved.
